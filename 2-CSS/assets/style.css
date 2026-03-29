@@ -7,10 +7,42 @@
     --color-focus: ##ff4500;
 }
 
-h2,h3 {
-    text-align: center;
+body{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+    margin: 0px;
+}
+
+
+label,input{
+    display: block;
+    width: 100%;
+}
+
+h2{
+    text-transform: uppercase;
 }
 
 form{
+    display: flex;
+    flex-direction: column;
+    border: 3px solid var(--color-borde);
+    border-radius: 10px;
+    justify-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     align-items: center;
+    min-width: 400px;
+    padding: 30px;
+
+    /*-- colores--*/
+    background-color: var(--color-fondo);
+    color:var(--color-texto);
+
+}
+
+button:hover{
+    background-color:var(--color-focus);
 }
