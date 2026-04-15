@@ -4,7 +4,7 @@
     --color-texto: #333;
     --color-blanco: #fff;
     --color-borde: #ddd;
-    --color-focus: ##ff4500;
+    --color-focus: #ff4500;
 }
 
 /*reset*/
@@ -99,4 +99,12 @@ input{
     border-radius: 10px;
     height: 40px;
     font-weight: bold;
+}
+
+button:hover{
+    background-color: var(--color-focus);
+}
+
+button:focus{
+    border-color: var(--color-focus);
 }
