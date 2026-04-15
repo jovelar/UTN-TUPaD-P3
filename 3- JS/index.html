@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panaderia "Mignon"</title>
+</head>
+<body>
+    <header>
+        <table>
+            <tr>
+                <td><img src="assets/logo_pizza.png" width="50px"></td>
+                <td><h1>Food Store</h1></td>
+            </tr>
+        </table>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">Inicio</a> </li>
+            <li><a href="#">Mis Pedidos</a></li>
+            <li><a href="#">Carrito</a></li>
+            <li><a href="admin.html">Panel Admin</a></li>
+        </ul>
+        <hr>
+    </nav>
+    <aside>
+        <h3>Categorías</h3>
+        <ul id="Categorias">
+            <li> <a href="#">Todas</a></li>
+            <li><a href="#">Hamburguesas</a></li>
+            <li><a href="#">Pizzas</a></li>
+            <li><a href="#">Papas Fritas</a></li>
+            <li><a href="#">Bebidas</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <form>
+            <label for="buscador">Buscar productos: </label>
+            <input id="buscador" type="text" placeholder="ej: hamburguesas" > 
+            <button type="submit">buscar</button>
+        </form>
+        <article id="Productos">
+            <h2>Productos Destacados</h2>
+            <h3>Hamburguesa</h3>
+                <img src="assets/Hamburguesa.jpg" width="250">
+                <p>Hamburguesa Completa con papas fritas y bebida</p>
+                <p><strong>$12000</strong></p>
+                <button type="submit">Agregar</button>
+
+            <h3>Pizzas Muzarella</h3>
+                <img src="assets/pizza_muzarella.jpg" width="250">
+                <p>Pizza muzzarella de 8 porciones</p>
+                <p><strong>$15000</strong></p>
+                <button type="submit">Agregar</button>
+            <h3>Papas Fritas</h3>
+                <img src="assets/papas_fritas.jpg" width="250">
+                <p>Porcion de papas fritas</p>
+                <p><strong>$3500</strong></p>
+                <button type="submit">Agregar</button>
+            <h3>Coca cola 500</h3>
+                <img src="assets/coca_cola_500.jpeg" width="250">
+                <p>Coca cola 500 cc</p>
+                <p><strong>$1300</strong></p>
+                <button type="submit">Agregar</button>
+
+        </article>
+    </main>
+    <hr>
+    <footer>
+        <p>2026 Panaderia Mignon</p>
+        <p>Todos los derechos reservados</p>
+        <p><strong>Contacto</strong></p>
+        <p> Telefono: 02254 123456</p>
+        <p>Direccion Rivadavia 2000, Pinamar (CP7167), Provincia de Buenos Aires, Argentina</p>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/Data.js"></script>
+
+</body>
+</html>
