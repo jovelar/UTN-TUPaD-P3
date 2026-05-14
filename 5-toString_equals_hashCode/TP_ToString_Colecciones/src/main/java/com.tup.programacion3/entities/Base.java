@@ -1,0 +1,41 @@
+package com.tup.programacion3.entities;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+public abstract class Base {
+    private Long id;
+    private boolean eliminado;
+    private LocalDateTime createdAt;
+
+    public Base(Long id,LocalDateTime createdAt){
+        this.id=id;
+        this.createdAt=createdAt;
+        //por defecto al crear, no esta como "eliminado"
+        eliminado=false;
+    }
+    @Override
+    public String toString(){
+        return "id:"+this.id+",creado:"+this.createdAt+",eliminado:"+this.eliminado;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(this==object){
+            return true;
+        }
+
+        if(object==null || getClass()!=object.getClass()){
+            return false;
+        }
+
+        Base compara=(Base)object;
+
+        return id == compara.id && Objects.equals(createdAt,compara.createdAt);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id,createdAt);
+    }
+}
