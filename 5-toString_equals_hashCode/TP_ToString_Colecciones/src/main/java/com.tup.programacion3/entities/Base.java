@@ -14,6 +14,23 @@ public abstract class Base {
         //por defecto al crear, no esta como "eliminado"
         eliminado=false;
     }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public String toString(){
         return "id:"+this.id+",creado:"+this.createdAt+",eliminado:"+this.eliminado;
@@ -38,4 +55,5 @@ public abstract class Base {
     public int hashCode(){
         return Objects.hash(id,createdAt);
     }
+
 }

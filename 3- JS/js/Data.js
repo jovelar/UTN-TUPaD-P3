@@ -8,7 +8,7 @@ const productos = [
         nombre: "Hamburguesa Completa",
         descripcion: "Hamburguesa completa con papas",
         precio: 1200,
-        imagen:"./assets/hamburguesa.jpg",
+        imagen:"./img/hamburguesa.jpg",
         categoria:"hamburguesas"
     },
     {
@@ -16,7 +16,7 @@ const productos = [
         nombre: "Pizza Muzarella",
         descripcion: "Pizza muzzarella de 8 porciones",
         precio: 1500,
-        imagen:"./assets/pizza_muzarella.jpg",
+        imagen:"./img/pizza_muzarella.jpg",
         categoria:"Pizzas"
     },
     {
@@ -24,14 +24,14 @@ const productos = [
         nombre: "Papas Fritas",
         descripcion: "Porcion de papas fritas",
         precio: 3500,
-        imagen:"./assets/papas_fritas.jpg",
+        imagen:"./img/papas_fritas.jpg",
         categoria:"papas_fritas"
     },
     {
-        id:3,
+        id:4,
         nombre: "Coca cola",
         descripcion: "Coca Cola 500cc",
         precio: 1300,
-        imagen:"./assets/coca_cola_500.jpeg",
+        imagen:"./img/coca_cola_500.jpeg",
         categoria:"bebidas"
     }];
