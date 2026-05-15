@@ -7,11 +7,13 @@ public class DetallePedido extends Base {
 
     private int cantidad;
     private double subTotal;
+    private Producto producto;
 
-    public DetallePedido(Long id, LocalDateTime createdAt,int cantidad, double subTotal) {
+    public DetallePedido(Long id, LocalDateTime createdAt,Producto producto,int cantidad, double subTotal) {
         super(id, createdAt);
         this.cantidad=cantidad;
         this.subTotal=subTotal;
+        this.producto=producto;
     }
 
 

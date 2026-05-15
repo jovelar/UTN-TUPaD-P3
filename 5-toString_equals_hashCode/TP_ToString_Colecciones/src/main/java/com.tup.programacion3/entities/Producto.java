@@ -2,6 +2,7 @@ package com.tup.programacion3.entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Producto extends Base{
     private String nombre;
@@ -10,8 +11,9 @@ public class Producto extends Base{
     private int stock;
     private String imagen;
     private boolean disponible;
+    private Categoria categoria;
 
-    public Producto(Long id, LocalDateTime createdAt,String nombre,Double precio, String descripcion,int stock,String imagen,boolean disponible) {
+    public Producto(Long id, LocalDateTime createdAt,String nombre,Double precio, String descripcion,int stock,String imagen,boolean disponible, Categoria categoria) {
         super(id, createdAt);
         this.nombre=nombre;
         this.precio=precio;
@@ -19,6 +21,7 @@ public class Producto extends Base{
         this.stock=stock;
         this.imagen=imagen;
         this.disponible=disponible;
+        this.categoria=categoria;
     }
 
     public String getNombre() {
@@ -81,14 +84,17 @@ public class Producto extends Base{
 
     @Override
     public boolean equals(Object object){
-        if(this==object){
-            return true;
-        }
-
-        if(object==null || getClass()!=object.getClass()){
+        if(super.equals(object)==false){
             return false;
         }
 
+        Producto p = (Producto) object;
 
+        return Objects.equals(nombre,p.nombre) && Objects.equals(precio,p.precio);
+    }
+
+    @Override
+     public int hashCode(){
+        return Objects.hash(super.hashCode(),nombre,precio);
     }
 }
