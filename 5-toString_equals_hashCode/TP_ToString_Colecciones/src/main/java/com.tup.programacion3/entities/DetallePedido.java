@@ -9,11 +9,11 @@ public class DetallePedido extends Base {
     private double subTotal;
     private Producto producto;
 
-    public DetallePedido(Long id, LocalDateTime createdAt,Producto producto,int cantidad, double subTotal) {
+    public DetallePedido(Long id, LocalDateTime createdAt,Producto producto,int cantidad) {
         super(id, createdAt);
         this.cantidad=cantidad;
-        this.subTotal=subTotal;
         this.producto=producto;
+        this.subTotal=cantidad * producto.getPrecio();
     }
 
 
@@ -31,6 +31,14 @@ public class DetallePedido extends Base {
 
     public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     @Override

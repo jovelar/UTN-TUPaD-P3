@@ -13,9 +13,9 @@ public class Pedido extends Base {
     private Estado estado;
     private Double total;
     private FormaPago formaPago;
-    private Set<DetallePedido>detalles = new HashSet<>();
+    private Set<DetallePedido>detalles= new HashSet<>();
 
-    public Pedido(Long id, LocalDateTime createdAt, LocalDate fecha, Estado estado, Double total, FormaPago formaPago) {
+    public Pedido(Long id, LocalDateTime createdAt, LocalDate fecha, Estado estado,FormaPago formaPago) {
         super(id, createdAt);
         this.fecha=fecha;
         this.estado=estado;
@@ -55,8 +55,36 @@ public class Pedido extends Base {
         this.formaPago = formaPago;
     }
 
-    public void addDetalleEnvio(int canto,Producto producto){
+    public void addDetallePedido(long id, int cantidad,Producto producto){
+        DetallePedido dp = new DetallePedido(id,LocalDateTime.now(),producto,cantidad);
+        detalles.add(dp);
+    }
 
+    public DetallePedido findDetallePedidoByProducto(Producto p){
+        DetallePedido detalleBuscado = null;
+
+        for(DetallePedido d : detalles ){
+            if(d.getProducto().equals(p)){
+                detalleBuscado=d;
+                break;
+            }
+        }
+        return detalleBuscado;
+    }
+
+    public void deleteDetallePedidoByProducto(Producto producto){
+        DetallePedido aEliminar=null;
+        for(DetallePedido d: detalles){
+            if(d.getProducto().equals(producto)){
+                //guardar referencia para luego eliminar fuera del bucle
+                aEliminar=d;
+                break;
+            }
+        }
+
+        if(aEliminar!=null){
+            detalles.remove(aEliminar);
+        }
     }
 
     @Override
@@ -67,7 +95,7 @@ public class Pedido extends Base {
     @Override
     public boolean equals(Object object){
         if(super.equals(object)==false){
-            return true;
+            return false;
         }
 
         if(object==null || getClass()!=object.getClass()){

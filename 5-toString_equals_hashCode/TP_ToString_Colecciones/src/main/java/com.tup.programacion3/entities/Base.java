@@ -48,7 +48,11 @@ public abstract class Base {
 
         Base compara=(Base)object;
 
-        return id == compara.id && Objects.equals(createdAt,compara.createdAt);
+        //return id == compara.id && Objects.equals(createdAt,compara.createdAt);
+        //SE ELIMINO A LOCALDATETIME COMO ELEMENTO PARA COMPARAR DEBIDO A QUE ES IMPOSIBLE
+        //QUE UN OBJECTO SE CREE AL MISMO MICROSEGUNDO QUE OTRO, PUDIENDO TENER 2 OBJETOS EL MISMO ID
+
+        return Objects.equals(id,compara.getId());
     }
 
     @Override
