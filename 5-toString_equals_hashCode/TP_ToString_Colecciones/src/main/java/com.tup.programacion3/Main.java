@@ -1,6 +1,7 @@
 package com.tup.programacion3;
 
 import com.tup.programacion3.entities.Categoria;
+import com.tup.programacion3.entities.Pedido;
 import com.tup.programacion3.entities.Producto;
 import com.tup.programacion3.entities.Usuario;
 import com.tup.programacion3.enums.Rol;
@@ -95,6 +96,58 @@ public class Main {
                 "Leche_entera_LS_Caja_litro.jpg",
                 true,
                 lacteos);
+
+        Producto lacteo2 = new Producto(6000002L,
+                LocalDateTime.now(),
+                "Queso cremoso la Serenisima",
+                4600.00,
+                "Queso cremoso la serenisima, por 500 gramos",
+                2500,
+                "Queso_ls_500.jpg",
+                true,
+                lacteos);
+        Producto lacteo3 = new Producto(6000003L,
+                LocalDateTime.now(),
+                "Yogurt la Serenisima 1L",
+                2000.00,
+                "Yogurt La Serenisima sabor vainilla, por 1 litro",
+                6000,
+                "Yogurt_LS_1l_jpg",
+                true,
+                lacteos);
+
+        Producto gas1 = new Producto(7000001L,
+                LocalDateTime.now(),
+                "Manaos 500cc ",
+                900.00,
+                "Gaseosa Manos sabor coca por 500cc",
+                9000,
+                "Manaos_500cc.jpg",
+                true,
+                gaseosas);
+
+        Producto gas2 = new Producto(7000002L,
+                LocalDateTime.now(),
+                "Sprite 500cc",
+                1100.00,
+                "Gaseosa Sprite 500cc",
+                11000,
+                "Sprite_500.jpg",
+                true,
+                gaseosas);
+
+        Producto gas3 = new Producto(7000003L,
+                LocalDateTime.now(),
+                "Fanta 500cc",
+                1100.00,
+                "Gaseosa Fanta 500cc",
+                8500,
+                "Fanta_500cc.jpg",
+                true,
+                gaseosas);
     }
+
+    //PEDIDOS
+    Pedido pedido1 = new Pedido();
 
 }
