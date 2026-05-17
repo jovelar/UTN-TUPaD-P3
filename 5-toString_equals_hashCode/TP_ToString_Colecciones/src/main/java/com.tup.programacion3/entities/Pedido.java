@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Pedido extends Base {
+public class Pedido extends Base implements Calculable{
     private LocalDate fecha;
     private Estado estado;
     private Double total;
@@ -108,5 +108,14 @@ public class Pedido extends Base {
 
     public int hashCode(){
         return Objects.hash(super.hashCode(),fecha,estado);
+    }
+
+    @Override
+    public void calcularTotal() {
+        Double total=0.0;
+        for(DetallePedido d: detalles){
+            total+=d.getSubTotal();
+        }
+        this.total=total;
     }
 }
