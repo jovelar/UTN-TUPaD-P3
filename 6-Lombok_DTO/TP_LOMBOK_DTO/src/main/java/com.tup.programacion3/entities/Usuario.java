@@ -1,10 +1,19 @@
 package com.tup.programacion3.entities;
 import com.tup.programacion3.enums.Rol;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+
 
 public class Usuario extends Base {
     private String nombre;
@@ -13,8 +22,10 @@ public class Usuario extends Base {
     private String celular;
     private String contrasena;
     private Rol rol;
+    @Builder.Default
     private Set<Pedido> pedidos= new HashSet<>();
 
+    /*
     public Usuario(Long id, LocalDateTime createdAt,String nombre, String apellido, String mail, String celular, String contrasena, Rol rol){
         super(id,createdAt);
         this.nombre=nombre;
@@ -25,6 +36,7 @@ public class Usuario extends Base {
         this.rol=rol;
     }
 
+     */
     public String getNombre() {
         return nombre;
     }

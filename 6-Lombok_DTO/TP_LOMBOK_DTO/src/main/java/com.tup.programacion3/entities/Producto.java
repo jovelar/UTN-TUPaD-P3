@@ -1,8 +1,19 @@
 package com.tup.programacion3.entities;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+@Getter
+@Setter
+@SuperBuilder
+@EqualsAndHashCode(of={"nombre","precio"}, callSuper=true)
+@ToString
 
 public class Producto extends Base{
     private String nombre;
@@ -13,6 +24,7 @@ public class Producto extends Base{
     private boolean disponible;
     private Categoria categoria;
 
+    /*
     public Producto(Long id, LocalDateTime createdAt,String nombre,Double precio, String descripcion,int stock,String imagen,boolean disponible, Categoria categoria) {
         super(id, createdAt);
         this.nombre=nombre;
@@ -23,7 +35,8 @@ public class Producto extends Base{
         this.disponible=disponible;
         this.categoria=categoria;
     }
-
+     */
+/*
     public String getNombre() {
         return nombre;
     }
@@ -97,4 +110,6 @@ public class Producto extends Base{
      public int hashCode(){
         return Objects.hash(super.hashCode(),nombre,precio);
     }
+
+ */
 }

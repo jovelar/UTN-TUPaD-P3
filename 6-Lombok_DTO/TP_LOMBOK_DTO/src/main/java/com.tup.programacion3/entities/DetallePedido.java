@@ -1,14 +1,18 @@
 package com.tup.programacion3.entities;
 
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@SuperBuilder
 public class DetallePedido extends Base {
 
     private int cantidad;
     private double subTotal;
     private Producto producto;
 
+    /*
     public DetallePedido(Long id, LocalDateTime createdAt,Producto producto,int cantidad) {
         super(id, createdAt);
         this.cantidad=cantidad;
@@ -16,6 +20,7 @@ public class DetallePedido extends Base {
         this.subTotal=cantidad * producto.getPrecio();
     }
 
+     */
 
     public int getCantidad() {
         return cantidad;

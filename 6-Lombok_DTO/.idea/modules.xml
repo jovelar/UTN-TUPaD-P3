@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/6-Lombok_DTO.iml" filepath="$PROJECT_DIR$/.idea/6-Lombok_DTO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TP_LOMBOK_DTO.main.iml" filepath="$PROJECT_DIR$/.idea/modules/TP_LOMBOK_DTO.main.iml" />
     </modules>
   </component>
 </project>

@@ -1,21 +1,27 @@
 package com.tup.programacion3.entities;
+import lombok.Builder;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@SuperBuilder
 public class Categoria extends Base{
 
     private String nombre;
     private String descripcion;
+    @Builder.Default
     private Set<Producto> productos = new HashSet<>();
 
+    /*
     public Categoria(Long id, LocalDateTime createdAt,String nombre, String descripcion) {
         super(id, createdAt);
         this.nombre=nombre;
         this.descripcion=descripcion;
     }
-
+     */
     public String getNombre() {
         return nombre;
     }
