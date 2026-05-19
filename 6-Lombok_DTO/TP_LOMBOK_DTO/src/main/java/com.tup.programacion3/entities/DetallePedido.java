@@ -1,11 +1,19 @@
 package com.tup.programacion3.entities;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Getter
+@Setter
+@ToString(of={"cantidad","subTotal"},callSuper=true)
 @SuperBuilder
+@EqualsAndHashCode(of={"cantidad","subTotal"},callSuper = true)
 public class DetallePedido extends Base {
 
     private int cantidad;
@@ -20,7 +28,7 @@ public class DetallePedido extends Base {
         this.subTotal=cantidad * producto.getPrecio();
     }
 
-     */
+
 
     public int getCantidad() {
         return cantidad;
@@ -70,4 +78,6 @@ public class DetallePedido extends Base {
     public int hashCode(){
         return Objects.hash(super.hashCode(),this.cantidad,this.subTotal);
     }
+
+     */
 }

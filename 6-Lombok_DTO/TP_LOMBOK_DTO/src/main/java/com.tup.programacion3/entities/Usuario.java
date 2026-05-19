@@ -1,8 +1,6 @@
 package com.tup.programacion3.entities;
 import com.tup.programacion3.enums.Rol;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -13,7 +11,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-
+@Getter
+@Setter
+@EqualsAndHashCode(of={"nombre","apellido","rol"},callSuper = true)
+@ToString(of={"nombre","apellido","rol"})
 
 public class Usuario extends Base {
     private String nombre;
@@ -36,7 +37,7 @@ public class Usuario extends Base {
         this.rol=rol;
     }
 
-     */
+
     public String getNombre() {
         return nombre;
     }
@@ -115,7 +116,7 @@ public class Usuario extends Base {
     public int hashCode(){
         return Objects.hash(this.nombre,this.apellido);
     }
-
+*/
 
     //Metodo adicional, no figura en el UML
     public void agregarPedido(Pedido p){

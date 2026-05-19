@@ -1,5 +1,5 @@
 package com.tup.programacion3.entities;
-import lombok.Builder;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -7,7 +7,12 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString(of={"nombre","descripcion"})
 @SuperBuilder
+@NoArgsConstructor
+@EqualsAndHashCode(of={"nombre"},callSuper = true)
 public class Categoria extends Base{
 
     private String nombre;
@@ -21,7 +26,7 @@ public class Categoria extends Base{
         this.nombre=nombre;
         this.descripcion=descripcion;
     }
-     */
+
     public String getNombre() {
         return nombre;
     }
@@ -66,7 +71,7 @@ public class Categoria extends Base{
     public int hashCode(){
         return Objects.hash(super.hashCode(),nombre);
     }
-
+    */
     //Este metodo no esta en el UML
 
     public void agregarProducto(Producto p){

@@ -12,9 +12,10 @@ import java.util.Set;
 
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-
+@EqualsAndHashCode(of={"fecha","estado"},callSuper = true)
 @SuperBuilder
 
 public class Pedido extends Base implements Calculable{
@@ -33,7 +34,7 @@ public class Pedido extends Base implements Calculable{
         this.total=total;
         this.formaPago=formaPago;
     }
-    */
+
     public LocalDate getFecha() {
         return fecha;
     }
@@ -65,7 +66,7 @@ public class Pedido extends Base implements Calculable{
     public void setFormaPago(FormaPago formaPago) {
         this.formaPago = formaPago;
     }
-
+*/
     public void addDetallePedido(long id, int cantidad,Producto producto){
         //DetallePedido dp = new DetallePedido(id,LocalDateTime.now(),producto,cantidad);
         DetallePedido dp = DetallePedido.builder()
@@ -106,7 +107,7 @@ public class Pedido extends Base implements Calculable{
             detalles.remove(aEliminar);
         }
     }
-
+/*
     @Override
     public String toString(){
         return super.toString()+",fecha:"+this.fecha+",estado:"+this.estado+",total:"+this.total+",forma de pago:"+this.formaPago;
@@ -129,7 +130,7 @@ public class Pedido extends Base implements Calculable{
     public int hashCode(){
         return Objects.hash(super.hashCode(),fecha,estado);
     }
-
+*/
     @Override
     public void calcularTotal() {
         Double total=0.0;
