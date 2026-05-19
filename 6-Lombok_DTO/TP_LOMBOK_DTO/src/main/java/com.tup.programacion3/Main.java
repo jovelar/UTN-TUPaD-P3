@@ -74,16 +74,7 @@ public class Main {
     public static void main(String[] args) {
 
         //USUARIOS
-        /*
-        Usuario us1 = new Usuario(2000001L,
-                LocalDateTime.now(),
-                "Roberto",
-                "Carlos",
-                "rcarlos@gmail.com",
-                "012254545556",
-                "milanesas007",
-                Rol.USUARIO);
-         */
+
 
         Usuario us1=Usuario.builder()
                 .nombre("Roberto")
@@ -112,16 +103,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        /*
-        Usuario us2 = new Usuario(2000002L,
-                LocalDateTime.now(),
-                "Pepe",
-                "Mujica",
-                "pepemujica@gmail.com",
-                "01145469971",
-                "mujica001",
-                Rol.USUARIO);
-         */
+
 
         Usuario adm1 = Usuario.builder()
                 .nombre("Ppepe")
@@ -136,42 +118,22 @@ public class Main {
                 .build();
 
 
-        /*
-        Usuario adm1 = new Usuario(3000001L,
-                LocalDateTime.now(),
-                "Pepe",
-                "Argento",
-                "peperacing@gmai.com",
-                "011997355448899",
-                "recing1234",
-                Rol.ADMIN);
-        */
+
 
 
         //CATEGORIAS
-        //Categoria limpieza = new Categoria(1000001L, LocalDateTime.now(),"Limpieza","Productos de limpieza");
+
         Categoria limpieza = Categoria.builder().nombre("Limpieza").descripcion("Productos de limpieza").id(1000001L).eliminado(false).createdAt(LocalDateTime.now()).build();
 
-        //Categoria lacteos = new Categoria(1000002L,LocalDateTime.now(),"lacteos","Derivados de la leche");
+
         Categoria lacteos = Categoria.builder().nombre("lacteos").descripcion("Derivados de la leche").id(1000002L).eliminado(false).createdAt(LocalDateTime.now()).build();
 
-        //Categoria gaseosas = new Categoria(1000003L,LocalDateTime.now(),"Gaseosas","Bebidas azucaradas con gas");
+
         Categoria gaseosas = Categoria.builder().nombre("Gaseosas").descripcion("Bebidas azucaradas con gas").id(1000003L).eliminado(false).createdAt(LocalDateTime.now()).build();
 
 
         //PRODUCTOS
-        /*
-        Producto limp1 = new Producto(5000001L,
-                LocalDateTime.now(),
-                "Harpic",
-                25000.00,
-                "Limpiador de sarro",
-                2000,
-                "Harpic_limpiador_1.jpg",
-                true,
-                limpieza);
-                
-         */
+
 
         Producto limp1 = Producto.builder()
                 .nombre("Harpic")
@@ -184,17 +146,7 @@ public class Main {
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
-        /*
-        Producto limp2 = new Producto(5000002L,
-                LocalDateTime.now(),
-                "Detergente Ala",
-                4500.00,
-                "Detergente con aroma a limon",
-                8000,
-                "Detergente_ala.jpg",
-                true,
-                limpieza);
-         */
+
 
         Producto limp2 = Producto.builder()
                 .nombre("Detergente Ala")
@@ -208,17 +160,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-       /*
-        Producto limp3 = new Producto(5000003L,
-                LocalDateTime.now(),
-                "Esponja Ala",
-                1300.00,
-                "Esponja sintetica doble",
-                1600,
-                "Esponja_ALA.jpg",
-                true,
-                limpieza);
-        */
+
 
         Producto limp3 = Producto.builder()
                 .nombre("Esponja Ala")
@@ -232,17 +174,7 @@ public class Main {
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
-        /*
-        Producto limp4 = new Producto(5000004L,
-                LocalDateTime.now(),
-                "Esponja de acero ALA",
-                1800.00,
-                "Esponja de acero gruesa",
-                1000,
-                "Esponja_Acero_ALA.jpg",
-                true,
-                limpieza);
-         */
+
 
         Producto limp4 = Producto.builder()
                 .nombre("Esponja de acero ALA")
@@ -256,17 +188,7 @@ public class Main {
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
-        /*
-        Producto lacteo1 = new Producto(6000001L,
-                LocalDateTime.now(),
-                "Leche entera la Serenisima",
-                1200.00,
-                "Leche entera en caja de 1 litro",
-                5000,
-                "Leche_entera_LS_Caja_litro.jpg",
-                true,
-                lacteos);
-         */
+
 
         Producto lacteo1 = Producto.builder()
                 .nombre("Leche entera la Serenisima")
@@ -280,17 +202,7 @@ public class Main {
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
-        /*
-        Producto lacteo2 = new Producto(6000002L,
-                LocalDateTime.now(),
-                "Queso cremoso la Serenisima",
-                4600.00,
-                "Queso cremoso la serenisima, por 500 gramos",
-                2500,
-                "Queso_ls_500.jpg",
-                true,
-                lacteos);
-        */
+
 
         Producto lacteo2 = Producto.builder()
                 .nombre("Queso cremoso la Serenisima")
@@ -304,17 +216,7 @@ public class Main {
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
-        /*
-        Producto lacteo3 = new Producto(6000003L,
-                LocalDateTime.now(),
-                "Yogurt la Serenisima 1L",
-                2000.00,
-                "Yogurt La Serenisima sabor vainilla, por 1 litro",
-                6000,
-                "Yogurt_LS_1l_jpg",
-                true,
-                lacteos);
-        */
+
 
         Producto lacteo3 = Producto.builder()
                 .nombre("Yogurt la Serenisima 1L")
@@ -329,18 +231,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        /*
-        Producto gas1 = new Producto(7000001L,
-                LocalDateTime.now(),
-                "Manaos 500cc ",
-                900.00,
-                "Gaseosa Manos sabor coca por 500cc",
-                9000,
-                "Manaos_500cc.jpg",
-                true,
-                gaseosas);
 
-         */
 
         Producto gas1 = Producto.builder()
                 .nombre("Manaos 500cc ")
@@ -354,18 +245,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        /*
-        Producto gas2 = new Producto(7000002L,
-                LocalDateTime.now(),
-                "Sprite 500cc",
-                1100.00,
-                "Gaseosa Sprite 500cc",
-                11000,
-                "Sprite_500.jpg",
-                true,
-                gaseosas);
 
-         */
         Producto gas2 = Producto.builder()
                 .nombre("Sprite 500cc")
                 .precio(1100.00)
@@ -378,17 +258,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        /*
-        Producto gas3 = new Producto(7000003L,
-                LocalDateTime.now(),
-                "Fanta 500cc",
-                1100.00,
-                "Gaseosa Fanta 500cc",
-                8500,
-                "Fanta_500cc.jpg",
-                true,
-                gaseosas);
-        */
+
 
         Producto gas3 = Producto.builder()
                 .nombre("Fanta 500cc")
@@ -418,12 +288,8 @@ public class Main {
         gaseosas.agregarProducto(gas3);
 
         //PEDIDOS
-        /*
-        Pedido pedido1 = new Pedido(9000001L,
-                LocalDateTime.now(),
-                LocalDate.of(2026,06,01),
-                Estado.PENDIENTE,FormaPago.EFECTIVO);
-        */
+
+
         Pedido pedido1 = Pedido.builder()
                 .fecha(LocalDate.of(2026,06,01))
                 .estado(Estado.PENDIENTE)
@@ -438,12 +304,7 @@ public class Main {
         pedido1.addDetallePedido(8000002L,4,gas3);
         pedido1.addDetallePedido(8000003L,1,limp4);
 
-        /*
-        Pedido pedido2 = new Pedido(9000002L,
 
-                LocalDateTime.now(),LocalDate.of(2026,06,01),
-                Estado.PENDIENTE,FormaPago.EFECTIVO);
-        */
 
         Pedido pedido2 = Pedido.builder()
                 .fecha(LocalDate.of(2026,06,01))
@@ -457,11 +318,7 @@ public class Main {
         pedido2.addDetallePedido(800005L,5,limp1);
         pedido2.addDetallePedido(800006L,2,limp4);
 
-        /*
-        Pedido pedido3 = new Pedido(9000003L,
-                LocalDateTime.now(),LocalDate.of(2026,06,01),
-                Estado.CONFIRMADO,FormaPago.TARJETA);
-        */
+
 
         Pedido pedido3 = Pedido.builder()
                 .fecha(LocalDate.of(2026,06,01))
@@ -495,11 +352,6 @@ public class Main {
         pedido4.addDetallePedido(8000010L,5,gas2);
         //pedido4.addDetallePedido();
 
-        /*
-        Pedido pedido5 = new Pedido(9000005L,
-                LocalDateTime.now(),LocalDate.of(2026,05,25),
-                Estado.TERMINADO,FormaPago.TRANSFERENCIA);
-        */
 
         Pedido pedido5 = Pedido.builder()
                 .fecha(LocalDate.of(2026,05,25))
@@ -511,10 +363,6 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        /*Pedido pedido6 = new Pedido(9000006L,
-                LocalDateTime.now(),LocalDate.of(2026,05,25),
-                Estado.TERMINADO,FormaPago.TRANSFERENCIA);
-        */
 
         Pedido pedido6 = Pedido.builder()
                 .fecha(LocalDate.of(2026,05,25))
@@ -547,18 +395,6 @@ public class Main {
         usuarios.add(us2);
 
         //CREANDO EL PRODUCTO PARA LA COMPARACION DEL PUNTO 5
-
-        /*
-        Producto productoAComparar=new Producto(5000001L,
-                LocalDateTime.now(),
-                "Harpic",
-                25000.00,
-                "Limpiador de sarro",
-                2000,
-                "Harpic_limpiador_1.jpg",
-                true,
-                limpieza);
-        */
 
         Producto productoAComparar = Producto.builder()
                 .nombre("Harpic")
