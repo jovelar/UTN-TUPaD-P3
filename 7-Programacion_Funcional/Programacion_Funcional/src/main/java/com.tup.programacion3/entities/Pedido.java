@@ -68,10 +68,8 @@ public class Pedido extends Base implements Calculable{
 
     @Override
     public void calcularTotal() {
-        Double total=0.0;
-        for(DetallePedido d: detalles){
-            total+=d.getSubTotal();
-        }
-        this.total=total;
+        total=detalles.stream()
+                .mapToDouble(DetallePedido::getSubTotal)
+                .sum();
     }
 }

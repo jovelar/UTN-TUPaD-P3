@@ -10,7 +10,9 @@ import com.tup.programacion3.enums.Rol;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -409,6 +411,7 @@ public class Main {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+        /*
         System.out.println("\n Mostrando un producto\n");
         mostrarProducto(limp1);
 
@@ -420,9 +423,8 @@ public class Main {
 
         System.out.println("\nComparando productos con un producto nuevo:\n");
         compararConProducto(productoAComparar,categorias);
+         */
 
+        Consumer<List<Producto>> mostrarProductos = 
     }
-
-
-
 }
