@@ -1,8 +1,5 @@
 package com.tup.programacion3;
-import com.tup.programacion3.entities.Categoria;
-import com.tup.programacion3.entities.Pedido;
-import com.tup.programacion3.entities.Producto;
-import com.tup.programacion3.entities.Usuario;
+import com.tup.programacion3.entities.*;
 import com.tup.programacion3.enums.Estado;
 import com.tup.programacion3.enums.FormaPago;
 import com.tup.programacion3.enums.Rol;
@@ -141,7 +138,7 @@ public class Main {
                 .nombre("Harpic")
                 .precio(25000.00)
                 .descripcion("Harpic_limpiador_1.jpg")
-                .stock(2000).imagen("Harpic_limpiador_1.jpg")
+                .stock(4).imagen("Harpic_limpiador_1.jpg")
                 .disponible(true)
                 .categoria(limpieza)
                 .id(5000001L)
@@ -224,7 +221,7 @@ public class Main {
                 .nombre("Yogurt la Serenisima 1L")
                 .precio(2000.00)
                 .descripcion("Yogurt La Serenisima sabor vainilla, por 1 litro")
-                .stock(6000)
+                .stock(1)
                 .imagen("Yogurt_LS_1l_jpg")
                 .disponible(true)
                 .categoria(lacteos)
@@ -425,6 +422,20 @@ public class Main {
         compararConProducto(productoAComparar,categorias);
          */
 
-        Consumer<List<Producto>> mostrarProductos = 
+        //Mostrar todos los productos habilitados
+        categorias.stream()
+                .flatMap(c->c.getProductos().stream()) //Junta todos los productos de todas las categorias en un unico stream
+                .filter(Producto::isDisponible)
+                .forEach(p -> System.out.println(p.getNombre()));
+
+
+        //Mostrar todos los productos de un pedido
+        System.out.println("\nHay "+ pedido1.getDetalles().stream().mapToInt(DetallePedido::getCantidad).sum()+" items \n");
+
+        //Mostrar items que tengan menos de 5 en stock
+        categorias.stream().flatMap(c->c.getProductos().stream())
+                .filter(i -> i.getStock() <5)
+                .forEach(p -> System.out.println(p.getNombre() + " Tiene menos de 5 items"));
+
     }
 }
