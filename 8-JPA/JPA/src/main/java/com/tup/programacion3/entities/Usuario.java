@@ -1,5 +1,6 @@
 package com.tup.programacion3.entities;
 import com.tup.programacion3.enums.Rol;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -14,14 +15,24 @@ import java.util.Set;
 @EqualsAndHashCode(of={"nombre","apellido","rol"},callSuper = true)
 @ToString(of={"nombre","apellido","rol"})
 
+@Entity
+@Table(name="Usuarios")
 public class Usuario extends Base {
+    @Column(name="nombre")
     private String nombre;
+    @Column(name="apellido")
     private String apellido;
+    @Column(name="email")
     private String mail;
+    @Column(name="celular")
     private String celular;
+    @Column(name="contrasena")
     private String contrasena;
+    @Enumerated(EnumType.STRING)
     private Rol rol;
     @Builder.Default
+
+
     private Set<Pedido> pedidos= new HashSet<>();
 
 
