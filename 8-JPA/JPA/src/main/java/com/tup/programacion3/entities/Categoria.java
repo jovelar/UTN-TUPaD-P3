@@ -1,6 +1,7 @@
 package com.tup.programacion3.entities;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +12,15 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(of={"nombre"},callSuper = true)
+@Table(name="categoria")
 public class Categoria extends Base{
 
+    @Column(name="nombre")
     private String nombre;
+    @Column(name="descripcion")
     private String descripcion;
     @Builder.Default
+
     private Set<Producto> productos = new HashSet<>();
 
     //Este metodo no esta en el UML

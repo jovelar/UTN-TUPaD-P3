@@ -1,5 +1,9 @@
 package com.tup.programacion3.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -10,13 +14,22 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 
+@Entity
+@Table(name ="producto")
 public class Producto extends Base{
+    @Column(name="nombre")
     private String nombre;
+    @Column(name="precio")
     private Double precio;
+    @Column(name="descripcion")
     private String descripcion;
+    @Column(name="stock")
     private int stock;
+    @Column(name="imagen")
     private String imagen;
+    @Column(name="disponible")
     private boolean disponible;
+
     private Categoria categoria;
 
 }

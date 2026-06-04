@@ -1,6 +1,7 @@
 package com.tup.programacion3.entities;
 import com.tup.programacion3.enums.Estado;
 import com.tup.programacion3.enums.FormaPago;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,13 +18,17 @@ import java.util.Set;
 @EqualsAndHashCode(of={"fecha","estado"},callSuper = true)
 @SuperBuilder
 
-
+@Entity
+@Table(name = "Pedidos")
 public class Pedido extends Base implements Calculable{
     private LocalDate fecha;
     private Estado estado;
     private Double total;
     private FormaPago formaPago;
     @Builder.Default
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="detalles")
     private Set<DetallePedido>detalles= new HashSet<>();
 
     public void addDetallePedido(long id, int cantidad,Producto producto){

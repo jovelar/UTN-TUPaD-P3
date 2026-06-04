@@ -30,10 +30,14 @@ public class Usuario extends Base {
     private String contrasena;
     @Enumerated(EnumType.STRING)
     private Rol rol;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "usuario_pedidos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "pedido_id")
+    )
     @Builder.Default
-
-
-    @OneToMany(mappedBy = "usuario")
     private Set<Pedido> pedidos= new HashSet<>();
 
 
