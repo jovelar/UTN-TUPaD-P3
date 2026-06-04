@@ -33,6 +33,7 @@ public class Usuario extends Base {
     @Builder.Default
 
 
+    @OneToMany(mappedBy = "usuario")
     private Set<Pedido> pedidos= new HashSet<>();
 
 

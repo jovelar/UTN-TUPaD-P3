@@ -17,6 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(of={"fecha","estado"},callSuper = true)
 @SuperBuilder
 
+
 public class Pedido extends Base implements Calculable{
     private LocalDate fecha;
     private Estado estado;
