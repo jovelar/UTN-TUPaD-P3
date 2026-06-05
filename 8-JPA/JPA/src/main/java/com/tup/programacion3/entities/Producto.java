@@ -1,9 +1,6 @@
 package com.tup.programacion3.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -29,7 +26,8 @@ public class Producto extends Base{
     private String imagen;
     @Column(name="disponible")
     private boolean disponible;
-
+    @ManyToOne
+    @JoinColumn(name="categoria_id")
     private Categoria categoria;
 
 }

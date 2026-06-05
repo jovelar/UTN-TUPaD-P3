@@ -3,11 +3,15 @@ import com.tup.programacion3.entities.*;
 import com.tup.programacion3.enums.Estado;
 import com.tup.programacion3.enums.FormaPago;
 import com.tup.programacion3.enums.Rol;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -71,9 +75,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("miUnidad");
+        EntityManager em = emf.createEntityManager();
         //USUARIOS
-
-
         Usuario us1=Usuario.builder()
                 .nombre("Roberto")
                 .apellido("Roberto")
@@ -81,7 +85,6 @@ public class Main {
                 .celular("012254545556")
                 .contrasena("milanesas007")
                 .rol(Rol.USUARIO)
-                .id(2000001L)
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
 
@@ -96,7 +99,7 @@ public class Main {
                 .celular("01145469971")
                 .contrasena("mujica001")
                 .rol(Rol.USUARIO)
-                .id(2000002L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -110,7 +113,7 @@ public class Main {
                 .celular("011997355448899")
                 .contrasena("recing1234")
                 .rol(Rol.ADMIN)
-                .id(3000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -121,13 +124,13 @@ public class Main {
 
         //CATEGORIAS
 
-        Categoria limpieza = Categoria.builder().nombre("Limpieza").descripcion("Productos de limpieza").id(1000001L).eliminado(false).createdAt(LocalDateTime.now()).build();
+        Categoria limpieza = Categoria.builder().nombre("Limpieza").descripcion("Productos de limpieza").eliminado(false).createdAt(LocalDateTime.now()).build();
 
 
-        Categoria lacteos = Categoria.builder().nombre("lacteos").descripcion("Derivados de la leche").id(1000002L).eliminado(false).createdAt(LocalDateTime.now()).build();
+        Categoria lacteos = Categoria.builder().nombre("lacteos").descripcion("Derivados de la leche").eliminado(false).createdAt(LocalDateTime.now()).build();
 
 
-        Categoria gaseosas = Categoria.builder().nombre("Gaseosas").descripcion("Bebidas azucaradas con gas").id(1000003L).eliminado(false).createdAt(LocalDateTime.now()).build();
+        Categoria gaseosas = Categoria.builder().nombre("Gaseosas").descripcion("Bebidas azucaradas con gas").eliminado(false).createdAt(LocalDateTime.now()).build();
 
 
         //PRODUCTOS
@@ -140,7 +143,7 @@ public class Main {
                 .stock(4).imagen("Harpic_limpiador_1.jpg")
                 .disponible(true)
                 .categoria(limpieza)
-                .id(5000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -153,7 +156,7 @@ public class Main {
                 .stock(8000)
                 .imagen("Detergente_ala.jpg")
                 .disponible(true).categoria(limpieza)
-                .id(5000002L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -168,7 +171,7 @@ public class Main {
                 .imagen("Esponja_ALA.jpg")
                 .disponible(true)
                 .categoria(limpieza)
-                .id(5000003L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -182,7 +185,7 @@ public class Main {
                 .imagen("Esponja_Acero_ALA.jpg")
                 .disponible(true)
                 .categoria(limpieza)
-                .id(5000004L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -196,7 +199,7 @@ public class Main {
                 .imagen("Leche_entera_LS_Caja_litro.jpg")
                 .disponible(true)
                 .categoria(lacteos)
-                .id(6000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -210,7 +213,7 @@ public class Main {
                 .imagen("Queso_ls_500.jpg")
                 .disponible(true)
                 .categoria(lacteos)
-                .id(6000002L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -224,7 +227,7 @@ public class Main {
                 .imagen("Yogurt_LS_1l_jpg")
                 .disponible(true)
                 .categoria(lacteos)
-                .id(6000003L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -238,7 +241,7 @@ public class Main {
                 .stock(9000).imagen("Manaos_500cc.jpg")
                 .disponible(true)
                 .categoria(gaseosas)
-                .id(7000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -251,7 +254,7 @@ public class Main {
                 .stock(11000).imagen("Sprite_500.jpg")
                 .disponible(true)
                 .categoria(gaseosas)
-                .id(7000002L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -266,7 +269,7 @@ public class Main {
                 .imagen("Fanta_500cc.jpg")
                 .disponible(true)
                 .categoria(gaseosas)
-                .id(7000003L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -293,14 +296,14 @@ public class Main {
                 .estado(Estado.PENDIENTE)
                 .total(0.0)
                 .formaPago(FormaPago.EFECTIVO)
-                .id(9000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        pedido1.addDetallePedido(8000001L,4,lacteo1);
-        pedido1.addDetallePedido(8000002L,4,gas3);
-        pedido1.addDetallePedido(8000003L,1,limp4);
+        pedido1.addDetallePedido(4,lacteo1);
+        pedido1.addDetallePedido(4,gas3);
+        pedido1.addDetallePedido(1,limp4);
 
 
 
@@ -308,13 +311,13 @@ public class Main {
                 .fecha(LocalDate.of(2026,06,01))
                 .estado(Estado.PENDIENTE).total(0.0)
                 .formaPago(FormaPago.EFECTIVO)
-                .id(9000002L).eliminado(false)
+                .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        pedido2.addDetallePedido(800004L,1,limp3);
-        pedido2.addDetallePedido(800005L,5,limp1);
-        pedido2.addDetallePedido(800006L,2,limp4);
+        pedido2.addDetallePedido(1,limp3);
+        pedido2.addDetallePedido(5,limp1);
+        pedido2.addDetallePedido(2,limp4);
 
 
 
@@ -323,14 +326,14 @@ public class Main {
                 .estado(Estado.CONFIRMADO)
                 .total(0.0)
                 .formaPago(FormaPago.TARJETA)
-                .id(9000003L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        pedido3.addDetallePedido(8000007L,1,gas3);
-        pedido3.addDetallePedido(8000008L,5,lacteo1);
-        pedido3.addDetallePedido(8000008L,6,limp3);
+        pedido3.addDetallePedido(1,gas3);
+        pedido3.addDetallePedido(5,lacteo1);
+        pedido3.addDetallePedido(6,limp3);
 
         /*
         Pedido pedido4 = new Pedido(9000004L,
@@ -341,13 +344,13 @@ public class Main {
                 .fecha(LocalDate.of(2026,05,25))
                 .estado(Estado.TERMINADO).total(0.0)
                 .formaPago(FormaPago.TRANSFERENCIA)
-                .id(9000004L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        pedido4.addDetallePedido(8000009L,5,lacteo3);
-        pedido4.addDetallePedido(8000010L,5,gas2);
+        pedido4.addDetallePedido(5,lacteo3);
+        pedido4.addDetallePedido(5,gas2);
         //pedido4.addDetallePedido();
 
 
@@ -356,7 +359,7 @@ public class Main {
                 .estado(Estado.TERMINADO)
                 .total(0.0)
                 .formaPago(FormaPago.TRANSFERENCIA)
-                .id(9000005L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -367,7 +370,7 @@ public class Main {
                 .estado(Estado.TERMINADO)
                 .total(0.0)
                 .formaPago(FormaPago.TRANSFERENCIA)
-                .id(9000006L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -402,7 +405,7 @@ public class Main {
                 .imagen( "Harpic_limpiador_1.jpg")
                 .disponible(true)
                 .categoria(limpieza)
-                .id(5000001L)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -435,6 +438,111 @@ public class Main {
         categorias.stream().flatMap(c->c.getProductos().stream())
                 .filter(i -> i.getStock() <5)
                 .forEach(p -> System.out.println(p.getNombre() + " Tiene menos de 5 items"));
+
+
+        //4- persistiendo los objetos
+        em.getTransaction().begin();
+
+       //categorias primero porque productos dependen de ellas
+        em.persist(limpieza);
+        em.persist(lacteos);
+        em.persist(gaseosas);
+
+        //productos
+        em.persist(limp1);
+        em.persist(limp2);
+        em.persist(limp3);
+        em.persist(limp4);
+        em.persist(lacteo1);
+        em.persist(lacteo2);
+        em.persist(lacteo3);
+        em.persist(gas1);
+        em.persist(gas2);
+        em.persist(gas3);
+
+        // Usuarios antes que pedidos porque pedidos dependen de ellos
+        em.persist(us1);
+        em.persist(us2);
+        em.persist(adm1);
+
+         // Pedidos
+        em.persist(pedido1);
+        em.persist(pedido2);
+        em.persist(pedido3);
+        em.persist(pedido4);
+        em.persist(pedido5);
+        em.persist(pedido6);
+
+        em.getTransaction().commit();
+
+
+        //5- Moodificando 2 productos
+
+        em.getTransaction().begin();
+
+        Producto prod1 = em.find(Producto.class,3l);
+        //Si existe
+        if(prod1!=null){
+            prod1.setPrecio(666.00);
+        }
+
+        Producto prod2 = em.find(Producto.class,5l);
+        //Si existe
+        if(prod2!=null){
+            prod2.setPrecio(77777.00);
+        }
+        em.getTransaction().commit();
+
+        Scanner scan = new Scanner(System.in);
+
+        //6 Buscar un usuario por id
+        em.getTransaction().begin();
+        System.out.println("Ingrese un id a buscar: ");
+        Long idAbuscar=scan.nextLong();
+
+        Usuario usBusqueda = em.find(Usuario.class,idAbuscar);
+        if(usBusqueda!=null){
+            System.out.println(usBusqueda.toString());
+        }else{
+            System.out.println("El Usuario no existe");
+        }
+
+        em.getTransaction().commit();
+
+        //7 Buscando por email
+
+        em.getTransaction().begin();
+        System.out.println("Ingrese un email a buscar: ");
+        String emailABuscar = scan.next();
+
+        Usuario usuarioBuscado = em.createQuery("SELECT u FROM Usuario u WHERE u.mail = :mail", Usuario.class)
+                .setParameter("mail", emailABuscar).getSingleResult();
+
+        if(usuarioBuscado!=null){
+            System.out.println(usuarioBuscado.toString());
+        }else{
+            System.out.println("No existe usuario con ese email");
+        }
+
+        em.getTransaction().commit();
+
+         //8 Borrando un producto de forma logica
+
+        em.getTransaction().begin();
+        System.out.println("Ingrese el id del producto a eliminar: ");
+        Long idProductoAEliminar = scan.nextLong();
+        Producto productoBajaLogica = em.find(Producto.class,idProductoAEliminar);
+        if(productoBajaLogica!=null){
+            productoBajaLogica.setDisponible(false);
+            System.out.println("Producto dado de baja!");
+        }
+        else{
+            System.out.println("El producto no existe");
+        }
+        em.getTransaction().commit();
+
+        em.close();
+        emf.close();
 
     }
 }

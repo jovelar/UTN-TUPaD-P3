@@ -21,23 +21,32 @@ import java.util.Set;
 @Entity
 @Table(name = "Pedidos")
 public class Pedido extends Base implements Calculable{
+    @Column(name="fecha")
     private LocalDate fecha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="estado")
     private Estado estado;
+
+    @Column(name="total")
     private Double total;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="forma_pago")
     private FormaPago formaPago;
     @Builder.Default
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="detalles")
+    @JoinColumn(name="pedido_id")
     private Set<DetallePedido>detalles= new HashSet<>();
 
-    public void addDetallePedido(long id, int cantidad,Producto producto){
+    public void addDetallePedido( int cantidad,Producto producto){
         //DetallePedido dp = new DetallePedido(id,LocalDateTime.now(),producto,cantidad);
         DetallePedido dp = DetallePedido.builder()
                 .cantidad(cantidad)
                 .subTotal(0)
                 .producto(producto)
-                .id(id)
+
                 .eliminado(false)
                 .createdAt(LocalDateTime.now())
 

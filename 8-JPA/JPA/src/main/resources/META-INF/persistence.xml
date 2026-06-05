@@ -16,7 +16,6 @@
         <class>com.tup.programacion3.entities.DetallePedido</class>
         <class>com.tup.programacion3.entities.Producto</class>
         <class>com.tup.programacion3.entities.Categoria</class>
-        <class>com.tup.programacion3.entities.Base</class>
 
         <properties>
             <!-- JDBC H2 en archivo -->

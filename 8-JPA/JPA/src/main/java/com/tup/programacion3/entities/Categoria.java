@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @ToString(of={"nombre","descripcion"})
@@ -21,6 +22,7 @@ public class Categoria extends Base{
     private String descripcion;
     @Builder.Default
 
+    @OneToMany(mappedBy = "categoria",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Producto> productos = new HashSet<>();
 
     //Este metodo no esta en el UML
