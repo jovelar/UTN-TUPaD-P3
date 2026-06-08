@@ -1,4 +1,4 @@
-package com.tup.programacion3.enums;
+package com.tp.jpa.model.enums;
 
 public enum Estado {
     PENDIENTE,
