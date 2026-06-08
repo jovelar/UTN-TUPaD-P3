@@ -1,5 +1,5 @@
-package com.tup.programacion3.entities;
-import com.tup.programacion3.enums.Rol;
+package com.tup.jpa.entities;
+import com.tup.jpa.enums.Rol;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

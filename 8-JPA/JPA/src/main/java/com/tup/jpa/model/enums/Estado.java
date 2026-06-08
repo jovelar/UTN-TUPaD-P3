@@ -1,6 +1,6 @@
-package com.tup.programacion3.enums;
+package com.tup.jpa.enums;
 
-public enum @Estado {
+public enum Estado {
     PENDIENTE,
     CONFIRMADO,
     TERMINADO,

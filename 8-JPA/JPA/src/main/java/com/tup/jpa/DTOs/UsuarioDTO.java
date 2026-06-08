@@ -1,6 +1,6 @@
-package com.tup.programacion3.DTOs;
+package com.tup.jpa.DTOs;
 
-import com.tup.programacion3.entities.Pedido;
+import com.tup.jpa.entities.Pedido;
 import java.time.LocalDateTime;
 import java.util.Set;
 

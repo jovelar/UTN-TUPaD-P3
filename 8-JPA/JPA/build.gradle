@@ -29,5 +29,5 @@ test {
 }
 
 application {
-    mainClass = 'com.tup.programacion3.Main'
+    mainClass = 'com.tup.jpa.Main'
 }
