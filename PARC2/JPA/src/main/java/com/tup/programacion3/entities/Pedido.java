@@ -1,6 +1,6 @@
 package com.tup.programacion3.entities;
-import com.tup.programacion3.enums.Estado;
-import com.tup.programacion3.enums.FormaPago;
+import com.tp.jpa.model.enums.Estado;
+import com.tp.jpa.model.enums.FormaPago;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

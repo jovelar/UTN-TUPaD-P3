@@ -1,8 +1,8 @@
-package com.tup.programacion3;
+package com.tp.jpa;
 import com.tup.programacion3.entities.*;
-import com.tup.programacion3.enums.Estado;
-import com.tup.programacion3.enums.FormaPago;
-import com.tup.programacion3.enums.Rol;
+import com.tp.jpa.model.enums.Estado;
+import com.tp.jpa.model.enums.FormaPago;
+import com.tp.jpa.model.enums.Rol;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
