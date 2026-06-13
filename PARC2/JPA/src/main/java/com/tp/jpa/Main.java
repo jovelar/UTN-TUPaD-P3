@@ -563,7 +563,6 @@ public class Main {
                             case 0:
                                 break;
                             case 1://Cat Nueva
-                                scan
                                 break;
                             case 2://baja
                                 break;
@@ -576,6 +575,24 @@ public class Main {
                     break;
 
                 case 2:
+                    int opcProd=0;
+                    do{
+                        opcProd=menuABMproducto(scan);
+                        switch(opcProd){
+                            case 0:
+                                break;
+                            case 1://Crear
+                                break;
+                            case 2://Borrado logico
+                                break;
+                            case 3://Modificar
+                                break;
+                            case 4://Listar
+                                break;
+                            default:
+                                break;
+                        }
+                    }while(opcProd!=0);
                     break;
 
                 default:
@@ -605,5 +622,25 @@ public class Main {
         System.out.println("\n\n0- VOLVER");
         opcion=scan.nextInt();
         return opcion;
+    }
+
+    public static int menuABMproducto(Scanner scan){
+        int opcion=0;
+        System.out.println("$$$$$$$$ PRODUCTOS $$$$$$$$");
+        System.out.println("1- Crear producto");
+        System.out.println("2- Borrar producto (logica)");
+        System.out.println("3- Modificar producto");
+        System.out.println("4- Listar productos activos");
+        System.out.println("\n\n0- VOLVER");
+        opcion=scan.nextInt();
+        return opcion;
+    }
+
+    public static void mostrarCategoria(){
+
+    }
+
+    public void mostrarProducto(){
+
     }
 }
