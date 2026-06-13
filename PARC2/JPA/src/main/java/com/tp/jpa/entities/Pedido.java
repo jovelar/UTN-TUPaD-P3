@@ -1,4 +1,4 @@
-package com.tup.programacion3.entities;
+package com.tp.jpa.entities;
 import com.tp.jpa.model.enums.Estado;
 import com.tp.jpa.model.enums.FormaPago;
 import jakarta.persistence.*;
