@@ -11,11 +11,11 @@
 
         <!-- TUS CLASES VAN ACA -->
 
-        <class>com.tp.jpa.entities.Usuario</class>
-        <class>com.tp.jpa.entities.Pedido</class>
-        <class>com.tp.jpa.entities.DetallePedido</class>
-        <class>com.tp.jpa.entities.Producto</class>
-        <class>com.tp.jpa.entities.Categoria</class>
+        <class>com.tp.jpa.model.Usuario</class>
+        <class>com.tp.jpa.model.Pedido</class>
+        <class>com.tp.jpa.model.DetallePedido</class>
+        <class>com.tp.jpa.model.Producto</class>
+        <class>com.tp.jpa.model.Categoria</class>
         <class>com.tp.jpa.entities.*</class>
 
         <properties>
@@ -33,7 +33,7 @@
 
             <!-- Hibernate -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
     </persistence-unit>

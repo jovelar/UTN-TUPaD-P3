@@ -1,5 +1,6 @@
 package com.tp.jpa.repository;
 
+import com.tp.jpa.model.Base;
 import com.tp.jpa.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -7,7 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BaseRepository <T>{
+public abstract class BaseRepository <T extends Base>{
     private Class<T> clase;
 
     //para que sea visible a las clases hijas
@@ -57,33 +58,31 @@ public abstract class BaseRepository <T>{
             // 3. Crear la consulta tipada y retornar la lista de resultados [1, 2]
             return em.createQuery(jpql, clase).getResultList();
         } finally {
-            // 4. Cerrar obligatoriamente el EntityManager en un bloque finally [2, 3]
+
             em.close();
         }
     }
 
     public boolean eliminarLogico(Long id) {
-        // 1. Abrir su propio EntityManager al inicio
+
         EntityManager em = emf.createEntityManager();
         try {
-            // 2. Iniciar la transacción para permitir la modificación
+            //inicio de la transaccionn
             em.getTransaction().begin();
 
-            // 3. Buscar la entidad por su ID
+            //por id
             T entidad = em.find(clase, id);
 
             if (entidad != null) {
-                // 4. Establecer el atributo 'eliminado' en true
-                // Nota: Al ser genérico <T>, deberás asegurarte de que la entidad
-                // tenga el método setEliminado(true).
-                // entidad.setEliminado(true);
+                //lo marca como eliminado
+                entidad.setEliminado(true);
 
-                // 5. Persistir el cambio usando merge() según indica la consigna
+                // se guarda el cambio
                 em.merge(entidad);
 
-                // 6. Confirmar la operación
+                // confirmacion de la transaccion
                 em.getTransaction().commit();
-                return true; // Se encontró y se actualizó [2]
+                return true; // si todo salio bien
             }
 
             return false; // El registro no existe [2]

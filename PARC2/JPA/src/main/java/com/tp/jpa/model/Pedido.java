@@ -1,4 +1,4 @@
-package com.tp.jpa.entities;
+package com.tp.jpa.model;
 import com.tp.jpa.model.enums.Estado;
 import com.tp.jpa.model.enums.FormaPago;
 import jakarta.persistence.*;
@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Pedidos")
-public class Pedido extends Base implements Calculable{
+public class Pedido extends Base implements Calculable {
     @Column(name="fecha")
     private LocalDate fecha;
 
@@ -40,7 +40,7 @@ public class Pedido extends Base implements Calculable{
     @JoinColumn(name="pedido_id")
     private Set<DetallePedido>detalles= new HashSet<>();
 
-    public void addDetallePedido( int cantidad,Producto producto){
+    public void addDetallePedido(int cantidad, Producto producto){
         //DetallePedido dp = new DetallePedido(id,LocalDateTime.now(),producto,cantidad);
         DetallePedido dp = DetallePedido.builder()
                 .cantidad(cantidad)

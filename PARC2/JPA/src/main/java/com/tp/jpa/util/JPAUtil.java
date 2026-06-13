@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class JPAUtil {
+    //Unico para que sea visible a todos
     private static final EntityManagerFactory emf;
 
     static {

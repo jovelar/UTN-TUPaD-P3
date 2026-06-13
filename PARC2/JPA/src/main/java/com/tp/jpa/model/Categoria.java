@@ -1,4 +1,4 @@
-package com.tp.jpa.entities;
+package com.tp.jpa.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(of={"nombre"},callSuper = true)
 @Table(name="categoria")
-public class Categoria extends Base{
+public class Categoria extends Base {
 
     @Column(name="nombre")
     private String nombre;

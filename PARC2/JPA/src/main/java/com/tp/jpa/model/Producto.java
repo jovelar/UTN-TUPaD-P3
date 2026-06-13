@@ -1,4 +1,4 @@
-package com.tp.jpa.entities;
+package com.tp.jpa.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name ="producto")
-public class Producto extends Base{
+public class Producto extends Base {
     @Column(name="nombre")
     private String nombre;
     @Column(name="precio")

@@ -1,4 +1,4 @@
-package com.tp.jpa.entities;
+package com.tp.jpa.model;
 import com.tp.jpa.model.enums.Rol;
 import jakarta.persistence.*;
 import lombok.*;

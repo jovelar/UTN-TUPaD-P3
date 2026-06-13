@@ -1,6 +1,6 @@
 package com.tp.jpa.DTOs;
 
-import com.tp.jpa.entities.Pedido;
+import com.tp.jpa.model.Pedido;
 import java.time.LocalDateTime;
 import java.util.Set;
 
