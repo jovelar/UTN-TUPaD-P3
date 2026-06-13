@@ -16,6 +16,8 @@ public class ProductoRepository extends BaseRepository<Producto> {
         EntityManager em = emf.createEntityManager();
         try {
 
+            //La consulta selecciona todos los campos de la tabla producto en la cual la columna ID coincida con el id buscardo,
+            //y ademas verifica que solo se seleccionen los productos que no se hayan eliminado logicamente
             String jpql = "SELECT p FROM Producto p WHERE p.categoria.id = :categoriaId AND p.eliminado = false";
 
             // uuso de TypedQuery para evitar casteos manuales

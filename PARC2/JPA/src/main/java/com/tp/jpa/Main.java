@@ -778,6 +778,10 @@ public class Main {
                                     System.out.println("Ingrese la nueva imagen: (actual:"+productoAModificar.getImagen()+")");
                                     productoAModificar.setImagen(scan.nextLine());
 
+                                    productoRepo.guardar(productoAModificar);
+
+                                    System.out.println("\nSe actualizo el producto!\n");
+
 
                                 }else{
                                     System.out.println("No hay productos para modificar");
@@ -801,7 +805,53 @@ public class Main {
                     }while(opcProd!=0);
                     break;
 
-                case 3: //Consultas
+                case 3:
+                    int opcionReporte=999;
+                    do{
+                        opcionReporte=menuReportes(scan);
+                        switch (opcionReporte){
+                            case 0:
+                                break;
+                            case 1:
+                                List<Categoria>categoriasReporte=categoriaRepo.listarActivos();
+                                if (categoriasReporte.size() > 0) {
+                                    long eleccionID;
+                                    Boolean categoriaValida=false;
+                                    do{
+
+                                        System.out.println("Ingrese el ID de la categoria seleccionada de la siguiente lista");
+                                        mostrarCategorias(categoriasReporte);
+                                        eleccionID=scan.nextLong();
+
+                                        //Se busca si el ID existe
+                                        for(Categoria c :categoriasReporte){
+                                            if(c.getId()==eleccionID){
+                                                categoriaValida=true;
+                                            }
+                                        }
+                                        if(categoriaValida==false){
+                                            System.out.println("ID incorrecto, seleccione uno de la lista");
+                                        }
+                                    }while(categoriaValida==false);
+
+                                    List<Producto>listaPorCategoria=productoRepo.buscarPorCategoria(eleccionID);
+                                    if(listaPorCategoria.size()>0){
+                                        mostrarListaProductos(listaPorCategoria);
+                                    }else{
+                                        System.out.println("La categoria aun no cuenta con productos para mostrar");
+                                    }
+                                    String nombreNuevoProd=null;
+
+                                }else{
+                                    System.out.println("No hay categorias para mostrar");
+                                }
+
+                                break;
+                            default:
+                                System.out.println("Opcion invalida!");
+                        }
+                    }while(opcionReporte!=0);
+
                     break;
 
                 default:
@@ -811,7 +861,7 @@ public class Main {
             }
         }while(opcion!=0);
 
-        //se cierra el EMF solo al final
+        //se cierra el EMF unicamente al final
         JPAUtil.getEntityManagerFactory().close();
     }
     public static int menuPrincipal(Scanner scan){
@@ -851,11 +901,10 @@ public class Main {
 
     public static int menuReportes(Scanner scan){
         int opcion=0;
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
+        System.out.println("\n\nXXXXXXXX Reportes XXXXXXXX");
+        System.out.println("1- Informe de productos por categoria");
+        System.out.println("\n\n0- VOLVER ");
+        opcion=scan.nextInt();
         return opcion;
     }
 
@@ -868,7 +917,7 @@ public class Main {
     public static void mostrarListaProductos(List<Producto> productos){
         System.out.println("\n\n\n");
         for(Producto p: productos){
-            System.out.println("ID:"+p.getId()+"" +
+            System.out.println("ID:"+p.getId()+" " +
                     ",NOMBRE: "+p.getNombre()+
                     ",PRECIO: "+p.getPrecio()+
                     "STOCK:"+p.getCategoria()+
