@@ -1,8 +1,9 @@
-package com.tup.jpa;
-import com.tup.jpa.entities.*;
-import com.tup.jpa.enums.Estado;
-import com.tup.jpa.enums.FormaPago;
-import com.tup.jpa.enums.Rol;
+package com.tp.jpa;
+import com.tp.jpa.entities.*;
+import com.tp.jpa.entities.*;
+import com.tp.jpa.model.enums.Estado;
+import com.tp.jpa.model.enums.FormaPago;
+import com.tp.jpa.model.enums.Rol;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -18,44 +19,44 @@ import java.util.Set;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    public static void mostrarProducto(Producto p){
+    public static void mostrarProducto(Producto p) {
         System.out.println(p);
     }
 
-    public static void mostrarProductos(Categoria cat){
-        for(Producto p : cat.getProductos()){
+    public static void mostrarProductos(Categoria cat) {
+        for (Producto p : cat.getProductos()) {
             mostrarProducto(p);
         }
     }
 
-    public static void mostrarCategoriasYProductos(Set<Categoria>categorias){
-        for(Categoria c: categorias){
+    public static void mostrarCategoriasYProductos(Set<Categoria> categorias) {
+        for (Categoria c : categorias) {
             System.out.println("\n");
-            System.out.println("###"+c+"###");
+            System.out.println("###" + c + "###");
             mostrarProductos(c);
         }
     }
 
-    public static void mostrarPedido(Pedido p){
+    public static void mostrarPedido(Pedido p) {
         System.out.println(p);
     }
 
-    public static void mostrarPedidos(Usuario usuario){
-        for(Pedido p: usuario.getPedidos()){
+    public static void mostrarPedidos(Usuario usuario) {
+        for (Pedido p : usuario.getPedidos()) {
             mostrarPedido(p);
         }
     }
 
-    public static void mostrarUsuario(Usuario u){
+    public static void mostrarUsuario(Usuario u) {
         System.out.println(u);
     }
 
-    public static void mostrarUsuarioConMasPedidos(Set<Usuario> usuarios){
-        Usuario usuarioMayor=null;
+    public static void mostrarUsuarioConMasPedidos(Set<Usuario> usuarios) {
+        Usuario usuarioMayor = null;
 
-        for(Usuario u: usuarios){
-            if(usuarioMayor==null || u.getPedidos().size()>usuarioMayor.getPedidos().size()){
-                usuarioMayor=u;
+        for (Usuario u : usuarios) {
+            if (usuarioMayor == null || u.getPedidos().size() > usuarioMayor.getPedidos().size()) {
+                usuarioMayor = u;
             }
         }
         System.out.println("El usuario con mas pedidos es :\n");
@@ -64,17 +65,17 @@ public class Main {
         mostrarPedidos(usuarioMayor);
     }
 
-    public static void compararConProducto(Producto producto,Set<Categoria>categorias){
-        for(Categoria c: categorias){
-            Set<Producto>listaProductos=c.getProductos();
-            for(Producto p:listaProductos){
-                System.out.println("Comparando: "+p.getNombre()+" con "+producto.getNombre()+" : "+p.equals(producto));
+    public static void compararConProducto(Producto producto, Set<Categoria> categorias) {
+        for (Categoria c : categorias) {
+            Set<Producto> listaProductos = c.getProductos();
+            for (Producto p : listaProductos) {
+                System.out.println("Comparando: " + p.getNombre() + " con " + producto.getNombre() + " : " + p.equals(producto));
             }
         }
     }
 
     public static void main(String[] args) {
-
+/*
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("miUnidad");
         EntityManager em = emf.createEntityManager();
         //USUARIOS
@@ -340,6 +341,7 @@ public class Main {
                 LocalDateTime.now(),LocalDate.of(2026,05,25),
                 Estado.TERMINADO,FormaPago.TRANSFERENCIA);
         */
+        /*
         Pedido pedido4 = Pedido.builder()
                 .fecha(LocalDate.of(2026,05,25))
                 .estado(Estado.TERMINADO).total(0.0)
@@ -423,7 +425,7 @@ public class Main {
         System.out.println("\nComparando productos con un producto nuevo:\n");
         compararConProducto(productoAComparar,categorias);
          */
-
+        /*
         //Mostrar todos los productos habilitados
         categorias.stream()
                 .flatMap(c->c.getProductos().stream()) //Junta todos los productos de todas las categorias en un unico stream
@@ -544,5 +546,6 @@ public class Main {
         em.close();
         emf.close();
 
+    }*/
     }
 }

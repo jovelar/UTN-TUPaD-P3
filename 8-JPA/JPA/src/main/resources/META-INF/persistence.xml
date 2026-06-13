@@ -11,11 +11,12 @@
 
         <!-- TUS CLASES VAN ACA -->
 
-        <class>com.tup.jpa.entities.Usuario</class>
-        <class>com.tup.jpa.entities.Pedido</class>
-        <class>com.tup.jpa.entities.DetallePedido</class>
-        <class>com.tup.jpa.entities.Producto</class>
-        <class>com.tup.jpa.entities.Categoria</class>
+        <class>com.tp.jpa.entities.Usuario</class>
+        <class>com.tp.jpa.entities.Pedido</class>
+        <class>com.tp.jpa.entities.DetallePedido</class>
+        <class>com.tp.jpa.entities.Producto</class>
+        <class>com.tp.jpa.entities.Categoria</class>
+        <class>com.tp.jpa.entities.*</class>
 
         <properties>
             <!-- JDBC H2 en archivo -->

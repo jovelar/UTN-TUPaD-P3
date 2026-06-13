@@ -1,4 +1,4 @@
-package com.tup.jpa.entities;
+package com.tp.jpa.entities;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import jakarta.persistence.*;

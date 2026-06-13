@@ -1,4 +1,4 @@
-package com.tup.jpa.entities;
+package com.tp.jpa.entities;
 
 @FunctionalInterface
 public interface Calculable {
