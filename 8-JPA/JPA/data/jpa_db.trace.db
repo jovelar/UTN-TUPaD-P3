@@ -1,0 +1,16 @@
+2026-06-13 16:53:50.752314-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIAS" not found (this database is empty); SQL statement:
+SELECT * FROM CATEGORIAS [42104-240]
+2026-06-13 16:53:57.814926-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIA" not found (this database is empty); SQL statement:
+SELECT * FROM CATEGORIA [42104-240]
+2026-06-13 16:54:04.252020-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "show [*]db"
+Syntax error in SQL statement "show [*]db"; SQL statement:
+show db [42000-240]
+2026-06-13 16:54:55.287422-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIA" not found (this database is empty); SQL statement:
+select * from categoria [42104-240]
+2026-06-13 16:54:57.743600-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIAS" not found (this database is empty); SQL statement:
+select * from categorias [42104-240]
