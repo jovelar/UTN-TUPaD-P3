@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body class="contenedor_body">
+    <header>
+        <nav class="contenedor_nav">
+            <h1 class="titulo_nav">Food Store</h1>
+            <ul class="lista_nav">
+                <li class="link_nav"><a href="/src/pages/store/home/home.html">Productos</a></li>
+                <li class="link_nav"><a href="/src/pages/store/cart/cart.html">Carrito</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="contenedor_carrito">
+        <h2>Mi Carrito</h2>
+        <div class="columnas_carrito">
+            <div class="carrito_vacio">
+                <h2>El carrito esta vacio</h2>
+                    <div class="boton_volver"> <a href="/src/pages/store/home/home.html">VOLVER</a></div>
+            </div>
+            <!--
+                <section id= "contenedor_carrito" class="inventario_carrito">
+                APARTADO DONDE SE CARGAN LOS ITEMS
+                </section>
+                <aside class="aside_resumen">
+                    <h4>Resumen</h4>   
+                    <span>Subtotal</span>
+                    <span>$1000x</span>
+                    <hr>
+                    <strong>TOTAL</strong>
+                    <strong>$1210</strong>
+                    <div class="funciones_botones_resumen">
+                        <button type="submit">FINALIZAR</button>
+                        <button type="submit" id="boton_limpiar">Limpiar carrito</button>
+                    </div>   
+                </aside>
+                -->
+        </div>
+    </div>
+
+    <script type="module" src="./cart.ts"></script>
+</body>
+<footer>
+
+</footer>
+</html>
