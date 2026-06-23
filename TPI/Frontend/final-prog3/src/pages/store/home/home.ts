@@ -55,15 +55,57 @@ function agregarAlCarrito(producto: Product) {
     alert("Producto agregado al carrito");
 }
 
+// function asignarListenersProductos() {
+//     document.querySelectorAll<HTMLButtonElement>(".product-card__btn").forEach(btn => {
+//         btn.addEventListener("click", (e) => {
+//             const id = Number((e.currentTarget as HTMLButtonElement).dataset.id);
+//             const producto = todosLosProductos.find(p => p.id === id);
+//             if (producto) agregarAlCarrito(producto);
+//         });
+//     });
+// }
+
 function asignarListenersProductos() {
+    // Listener del botón agregar (ya lo tenías)
     document.querySelectorAll<HTMLButtonElement>(".product-card__btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
+            e.stopPropagation();   // ← evita que el click llegue a la tarjeta
             const id = Number((e.currentTarget as HTMLButtonElement).dataset.id);
             const producto = todosLosProductos.find(p => p.id === id);
             if (producto) agregarAlCarrito(producto);
         });
     });
+
+    // Listener de la tarjeta (nuevo) → redirige al detalle
+    document.querySelectorAll<HTMLElement>(".product-card").forEach(card => {
+        card.addEventListener("click", (e) => {
+            const id = Number((e.currentTarget as HTMLElement).dataset.id);
+            window.location.href = `/src/pages/store/productDetail/productDetail.html?id=${id}`;
+        });
+    });
 }
+
+// function cargarProductos(lista: Product[]) {
+//     if (!listaDeProductos) return;
+//     listaDeProductos.innerHTML = "";
+//     lista.forEach(producto => {
+//         const nombreCat = catMap.get(producto.categoriaId) ?? "";
+//         listaDeProductos.innerHTML += `
+//             <article class="product-card">
+//                 <img src="${producto.imagen}" width="130" alt="${producto.nombre}">
+//                 <div class="product-card__details">
+//                     <span class="product-card__category">${nombreCat}</span>
+//                     <h3 class="product-card__name">${producto.nombre}</h3>
+//                     <p class="product-card__description">${producto.descripcion}</p>
+//                 </div>
+//                 <div class="product-card__footer">
+//                     <span class="product-card__price">$${producto.precio}</span>
+//                     <button class="product-card__btn" data-id="${producto.id}">+AGREGAR</button>
+//                 </div>
+//             </article>`;
+//     });
+//     asignarListenersProductos();
+// }
 
 function cargarProductos(lista: Product[]) {
     if (!listaDeProductos) return;
@@ -71,7 +113,7 @@ function cargarProductos(lista: Product[]) {
     lista.forEach(producto => {
         const nombreCat = catMap.get(producto.categoriaId) ?? "";
         listaDeProductos.innerHTML += `
-            <article class="product-card">
+            <article class="product-card" data-id="${producto.id}">
                 <img src="${producto.imagen}" width="130" alt="${producto.nombre}">
                 <div class="product-card__details">
                     <span class="product-card__category">${nombreCat}</span>
