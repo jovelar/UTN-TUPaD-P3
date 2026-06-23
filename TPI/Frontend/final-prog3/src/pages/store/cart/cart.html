@@ -1,52 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Food Store - Carrito</title>
     <link rel="stylesheet" href="/src/style.css">
 </head>
-
-<body class="contenedor_body">
+<body>
     <header>
-        <nav class="contenedor_nav">
-            <h1 class="titulo_nav">Food Store</h1>
-            <ul class="lista_nav">
-                <li class="link_nav"><a href="/src/pages/store/home/home.html">Productos</a></li>
-                <li class="link_nav"><a href="/src/pages/store/cart/cart.html">Carrito</a></li>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Inicio</a></li>
+                <li class="nav__link"><a href="/src/pages/client/orders/orders.html">Mis Pedidos</a></li>
+                <li class="nav__link"><a href="/src/pages/store/cart/cart.html">Carrito</a></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
             </ul>
         </nav>
     </header>
-    <div class="contenedor_carrito">
+
+    <div class="cart">
         <h2>Mi Carrito</h2>
-        <div class="columnas_carrito">
-            <div class="carrito_vacio">
-                <h2>El carrito esta vacio</h2>
-                    <div class="boton_volver"> <a href="/src/pages/store/home/home.html">VOLVER</a></div>
-            </div>
-            <!--
-                <section id= "contenedor_carrito" class="inventario_carrito">
-                APARTADO DONDE SE CARGAN LOS ITEMS
-                </section>
-                <aside class="aside_resumen">
-                    <h4>Resumen</h4>   
-                    <span>Subtotal</span>
-                    <span>$1000x</span>
-                    <hr>
-                    <strong>TOTAL</strong>
-                    <strong>$1210</strong>
-                    <div class="funciones_botones_resumen">
-                        <button type="submit">FINALIZAR</button>
-                        <button type="submit" id="boton_limpiar">Limpiar carrito</button>
-                    </div>   
-                </aside>
-                -->
-        </div>
+        <div class="cart__columns" id="cartColumns"></div>
     </div>
 
+    <footer>Datos food store</footer>
     <script type="module" src="./cart.ts"></script>
 </body>
-<footer>
-
-</footer>
 </html>

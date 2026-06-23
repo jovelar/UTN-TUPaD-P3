@@ -12,8 +12,8 @@ const initPage = () => {
   console.log("inicio de pagina");
   checkAuhtUser(
     "/src/pages/auth/login/login.html",
-    "/src/pages/admin/home/home.html",
-    "client"
+    "/src/pages/admin/adminHome/adminHome.html",
+    "USUARIO"
   );
 };
 initPage();

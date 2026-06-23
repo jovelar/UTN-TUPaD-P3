@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Store - Gestión de Categorías</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="admin">
+    <header>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Tienda</a></li>
+                <li class="nav__link"><a href="/src/pages/admin/adminHome/adminHome.html">Panel Admin</a></li>
+                <li class="nav__link"><span id="userName"></span></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin__body">
+        <aside class="admin__sidebar">
+            <div class="admin__sidebar-header">
+                <h3>Administración</h3>
+                <small>Panel de admin</small>
+            </div>
+            <nav>
+                <ul class="admin__sidebar-nav">
+                    <li><a href="/src/pages/admin/adminHome/adminHome.html">Dashboard</a></li>
+                    <li class="active"><a href="/src/pages/admin/categories/categories.html">Categorías</a></li>
+                    <li><a href="/src/pages/admin/products/products.html">Productos</a></li>
+                    <li><a href="/src/pages/admin/orders/orders.html">Pedidos</a></li>
+                    <li><a href="/src/pages/store/home/home.html">Ver Tienda</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin__content">
+            <div class="admin__page-header">
+                <h2>Gestión de Categorías</h2>
+                <button id="btnNuevaCategoria" class="btn btn--primary">+ Nueva Categoría</button>
+            </div>
+
+            <table class="admin-table" id="tablaCategorias">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCuerpo">
+                    <!-- Populated by categories.ts -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Modal crear/editar categoría -->
+    <div id="modalCategoria" class="modal" style="display:none">
+        <div class="modal__content">
+            <button id="cerrarModal" class="modal__close">×</button>
+            <h3 id="modalTitulo">Nueva Categoría</h3>
+            <form id="formCategoria">
+                <input type="hidden" id="categoriaId">
+                <div class="form__group">
+                    <label for="categoriaNombre">Nombre</label>
+                    <input type="text" id="categoriaNombre" required placeholder="Nombre de la categoría">
+                </div>
+                <div class="form__group">
+                    <label for="categoriaDescripcion">Descripción</label>
+                    <textarea id="categoriaDescripcion" placeholder="Descripción (opcional)"></textarea>
+                </div>
+                <div class="form__group">
+                    <label for="categoriaImagen">URL de Imagen</label>
+                    <input type="text" id="categoriaImagen" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+                <button type="submit" class="btn btn--primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>Datos food store</footer>
+    <script type="module" src="./categories.ts"></script>
+</body>
+</html>

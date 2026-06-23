@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "fecha": "2025-10-24",
+        "estado": "PENDIENTE",
+        "total": 25500.00,
+        "formaPago": "EFECTIVO",
+        "idUsuario": 2,
+        "detalles": [
+            {
+                "idProducto": 1,
+                "cantidad": 1,
+                "subtotal": 25000.00
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "fecha": "2025-10-20",
+        "estado": "TERMINADO",
+        "total": 51000.00,
+        "formaPago": "TARJETA",
+        "idUsuario": 2,
+        "detalles": [
+            {
+                "idProducto": 1,
+                "cantidad": 2,
+                "subtotal": 50000.00
+            }
+        ]
+    }
+]

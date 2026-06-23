@@ -2,29 +2,57 @@ import type { IUser } from "../../../types/IUser";
 import type { Rol } from "../../../types/Rol";
 import { navigate } from "../../../utils/navigate";
 
+interface UsuarioJSON {
+    id: number;
+    nombre: string;
+    mail: string;
+    password: string;
+    rol: Rol;
+}
+
 const form = document.getElementById("form") as HTMLFormElement;
 const inputEmail = document.getElementById("email") as HTMLInputElement;
-//const inputPassword = document.getElementById("password") as HTMLInputElement;
-const selectRol = document.getElementById("rol") as HTMLSelectElement;
+const inputPassword = document.getElementById("password") as HTMLInputElement;
+const errorMsg = document.getElementById("errorMsg") as HTMLParagraphElement;
 
-form.addEventListener("submit", (e: SubmitEvent) => {
-  e.preventDefault();
-  const valueEmail = inputEmail.value;
-  //const valuePassword = inputPassword.value;
-  const valueRol = selectRol.value as Rol;
+form.addEventListener("submit", async (e: SubmitEvent) => {
+    e.preventDefault();
 
-  if (valueRol === "admin") {
-    navigate("/src/pages/admin/home/home.html");
-  } else if (valueRol === "client") {
-    navigate("/src/pages/client/home/home.html");
-  }
+    const mail = inputEmail.value.trim();
+    const password = inputPassword.value.trim();
 
-  const user: IUser = {
-    email: valueEmail,
-    role: valueRol,
-    loggedIn: true,
-  };
+    let usuarios: UsuarioJSON[] = [];
 
-  const parseUser = JSON.stringify(user);
-  localStorage.setItem("userData", parseUser);
+    try {
+        const response = await fetch("/data/usuarios.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        usuarios = await response.json();
+    } catch (err) {
+        console.error("Error al cargar usuarios.json:", err);
+        if (errorMsg) errorMsg.textContent = `Error al cargar datos: ${err}`;
+        return;
+    }
+
+    const encontrado = usuarios.find(u => u.mail === mail && u.password === password);
+
+    if (!encontrado) {
+        if (errorMsg) errorMsg.textContent = "Email o contraseña incorrectos.";
+        return;
+    }
+
+    const user: IUser = {
+        id: encontrado.id,
+        nombre: encontrado.nombre,
+        mail: encontrado.mail,
+        loggedIn: true,
+        role: encontrado.rol,
+    };
+
+    localStorage.setItem("userData", JSON.stringify(user));
+
+    if (encontrado.rol === "ADMIN") {
+        navigate("/src/pages/admin/adminHome/adminHome.html");
+    } else {
+        navigate("/src/pages/store/home/home.html");
+    }
 });

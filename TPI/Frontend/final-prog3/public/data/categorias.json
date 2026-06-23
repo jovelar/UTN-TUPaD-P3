@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "nombre": "Hamburguesas",
+        "descripcion": "Diferentes hamburguesas de tipo smash",
+        "imagen": "/img/hamburguesas.jpg",
+        "eliminado": false
+    },
+    {
+        "id": 2,
+        "nombre": "Bebidas",
+        "descripcion": "Gaseosas, aguas y jugos",
+        "imagen": "/img/bebidas.jpg",
+        "eliminado": false
+    }
+]

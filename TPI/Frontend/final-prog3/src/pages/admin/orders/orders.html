@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Store - Gestión de Pedidos</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="admin">
+    <header>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Tienda</a></li>
+                <li class="nav__link"><a href="/src/pages/admin/adminHome/adminHome.html">Panel Admin</a></li>
+                <li class="nav__link"><span id="userName"></span></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin__body">
+        <aside class="admin__sidebar">
+            <div class="admin__sidebar-header">
+                <h3>Administración</h3>
+                <small>Panel de admin</small>
+            </div>
+            <nav>
+                <ul class="admin__sidebar-nav">
+                    <li><a href="/src/pages/admin/adminHome/adminHome.html">Dashboard</a></li>
+                    <li><a href="/src/pages/admin/categories/categories.html">Categorías</a></li>
+                    <li><a href="/src/pages/admin/products/products.html">Productos</a></li>
+                    <li class="active"><a href="/src/pages/admin/orders/orders.html">Pedidos</a></li>
+                    <li><a href="/src/pages/store/home/home.html">Ver Tienda</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin__content">
+            <div class="admin__page-header">
+                <h2>Gestión de Pedidos</h2>
+                <select id="filtroEstado">
+                    <option value="">Todos los pedidos</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="CONFIRMADO">Confirmado</option>
+                    <option value="TERMINADO">Terminado</option>
+                    <option value="CANCELADO">Cancelado</option>
+                </select>
+            </div>
+
+            <section id="listaPedidos">
+                <!-- Populated by orders.ts -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal detalle de pedido -->
+    <div id="modalDetalle" class="modal" style="display:none">
+        <div class="modal__content">
+            <button id="cerrarModal" class="modal__close">×</button>
+            <div id="modalContenido"></div>
+        </div>
+    </div>
+
+    <footer>Datos food store</footer>
+    <script type="module" src="./orders.ts"></script>
+</body>
+</html>

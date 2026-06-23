@@ -1,140 +1,135 @@
-import { PRODUCTS } from "../../../data/data";
-import type { ICategory } from "../../../types/category";
-import { getCategories } from "../../../data/data";
-import type { CartItem } from "../../../types/product";
+import type { Product, CartItem } from "../../../types/product";
+import { logout } from "../../../utils/auth";
+import { getUSer } from "../../../utils/localStorage";
+import { navigate } from "../../../utils/navigate";
+
+interface Categoria { id: number; nombre: string; }
 
 const listaDeProductos = document.querySelector<HTMLElement>("#listaDeProductos");
 const inputBusqueda = document.querySelector<HTMLInputElement>("#busqueda");
 const listaDeCategorias = document.querySelector<HTMLElement>("#listaDeCategorias");
+const spanUserName = document.getElementById("userName");
+const btnLogout = document.getElementById("logoutButton");
+const adminLink = document.getElementById("adminLink");
 
+let todosLosProductos: Product[] = [];
+let catMap: Map<number, string> = new Map();
 
-//barra de busqueda
-if (inputBusqueda) {
-    inputBusqueda.addEventListener("input", () => {
-        const textoBusqueda = inputBusqueda.value.toLowerCase();
-        buscarProducto(textoBusqueda);
-    });
-}
-
-function buscarProducto(termino: string) {
-    const productosEncontrados = PRODUCTS.filter(producto => 
-        producto.nombre.toLowerCase().includes(termino)
-    );
-
-    if (productosEncontrados.length === 0) {
-        if (listaDeProductos) {
-            listaDeProductos.innerHTML = `<p class="error-busqueda">No se encontraron productos que coincidan con "${termino}"</p>`;
-        }
-    } else {
-        cargarProductos(productosEncontrados);
+function initGuard() {
+    const raw = getUSer();
+    if (!raw) {
+        navigate("/src/pages/auth/login/login.html");
+        return false;
     }
+    const user = JSON.parse(raw);
+    if (spanUserName) spanUserName.textContent = user.nombre;
+    if (user.role === "ADMIN" && adminLink) adminLink.style.display = "";
+    return true;
 }
 
-function agregarAlCarrito(idProducto: number) {
+btnLogout?.addEventListener("click", logout);
+
+inputBusqueda?.addEventListener("input", () => {
+    const termino = inputBusqueda.value.toLowerCase();
+    const encontrados = todosLosProductos.filter(p =>
+        p.nombre.toLowerCase().includes(termino)
+    );
+    cargarProductos(encontrados.length ? encontrados : []);
+    if (!encontrados.length && listaDeProductos) {
+        listaDeProductos.innerHTML = `<p>No se encontraron productos para "${inputBusqueda.value}"</p>`;
+    }
+});
+
+function agregarAlCarrito(producto: Product) {
     const storage = localStorage.getItem("carrito");
     let carrito: CartItem[] = storage ? JSON.parse(storage) : [];
+    const itemExistente = carrito.find(item => item.id === producto.id);
 
-    const itemExistente = carrito.find(item => item.id === idProducto);
-
-    //por defecto se carga con 1
     if (itemExistente) {
         itemExistente.cantidad += 1;
     } else {
-        const productoOriginal = PRODUCTS.find(p => p.id === idProducto);
-        if (productoOriginal) {
-            carrito.push({ ...productoOriginal, cantidad: 1 });
-        }
+        carrito.push({ ...producto, cantidad: 1 });
     }
 
     localStorage.setItem("carrito", JSON.stringify(carrito));
-    alert("Producto agregado");
+    alert("Producto agregado al carrito");
 }
 
-
-// función para activar los botones de agregar de cada producto
 function asignarListenersProductos() {
-
-    //se selecciona de forma mas practica con la clase mas que con un id.
-    const botonesAgregar = document.querySelectorAll<HTMLButtonElement>(".boton_agregar");
-    botonesAgregar.forEach(boton => {
-        boton.addEventListener("click", (e) => {
+    document.querySelectorAll<HTMLButtonElement>(".product-card__btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
             const id = Number((e.currentTarget as HTMLButtonElement).dataset.id);
-            agregarAlCarrito(id);
+            const producto = todosLosProductos.find(p => p.id === id);
+            if (producto) agregarAlCarrito(producto);
         });
     });
 }
 
-
-function cargarCategorias() {
-    if (listaDeCategorias) {
-        const categorias = getCategories();
-        
-        //Se agrega la categoria que no esta en la lista
-        let html = `<li class="filtro" data-id="0">Todas las categorías</li>`;
-        
-        categorias.forEach(cat => {
-            html += `<li class="filtro" data-id="${cat.id}">${cat.nombre}</li>`;
-        });
-        
-        listaDeCategorias.innerHTML = html;
-        asignarListeners();
-    }
+function cargarProductos(lista: Product[]) {
+    if (!listaDeProductos) return;
+    listaDeProductos.innerHTML = "";
+    lista.forEach(producto => {
+        const nombreCat = catMap.get(producto.categoriaId) ?? "";
+        listaDeProductos.innerHTML += `
+            <article class="product-card">
+                <img src="${producto.imagen}" width="130" alt="${producto.nombre}">
+                <div class="product-card__details">
+                    <span class="product-card__category">${nombreCat}</span>
+                    <h3 class="product-card__name">${producto.nombre}</h3>
+                    <p class="product-card__description">${producto.descripcion}</p>
+                </div>
+                <div class="product-card__footer">
+                    <span class="product-card__price">$${producto.precio}</span>
+                    <button class="product-card__btn" data-id="${producto.id}">+AGREGAR</button>
+                </div>
+            </article>`;
+    });
+    asignarListenersProductos();
 }
 
+function cargarCategorias(categorias: Categoria[]) {
+    if (!listaDeCategorias) return;
+    let html = `<li class="store__category-item store__category-item--active" data-id="0">Todas las categorías</li>`;
+    categorias.forEach(cat => {
+        html += `<li class="store__category-item" data-id="${cat.id}">${cat.nombre}</li>`;
+    });
+    listaDeCategorias.innerHTML = html;
 
-//para los botones de las tarjetas
-function asignarListeners() {
-    const botones = document.querySelectorAll<HTMLElement>(".filtro");
+    document.querySelectorAll<HTMLElement>(".store__category-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+            document.querySelectorAll(".store__category-item").forEach(el =>
+                el.classList.remove("store__category-item--active")
+            );
+            (e.currentTarget as HTMLElement).classList.add("store__category-item--active");
 
-    botones.forEach(boton => {
-        boton.addEventListener("click", (e) => {
-            const target = e.currentTarget as HTMLElement;
-            const idSeleccionado = Number(target.dataset.id);
-
-            if (idSeleccionado === 0) {
-                cargarProductos(PRODUCTS);
+            const id = Number((e.currentTarget as HTMLElement).dataset.id);
+            if (id === 0) {
+                cargarProductos(todosLosProductos);
             } else {
-                const filtrados = PRODUCTS.filter(producto => 
-                    producto.categorias.some(cat => cat.id === idSeleccionado)
-                );
-                cargarProductos(filtrados);
+                cargarProductos(todosLosProductos.filter(p => p.categoriaId === id));
             }
         });
     });
 }
 
-function cargarProductos(listaProductos: typeof PRODUCTS) {
-    if (listaProductos && listaDeProductos) {
+async function init() {
+    if (!initGuard()) return;
 
-        //se limpia antes de cargar la lista
-        listaDeProductos.innerHTML = "";
+    const [resCats, resProds] = await Promise.all([
+        fetch("/data/categorias.json"),
+        fetch("/data/productos.json"),
+    ]);
+    const categorias: Categoria[] = await resCats.json();
+    const productos: Product[] = await resProds.json();
 
-        listaProductos.forEach((producto) => {
-            const tarjeta = `
-                <article class="producto">
-                    <img src="/src/img/${producto.imagen}" width="130">
-                    <div class="producto__store__detalles">
-                        <span class="categoria">${producto.categorias.map((categoria: ICategory) => categoria.nombre).join(", ")}</span>
-                        <h3 class="producto__nombre">${producto.nombre}</h3>
-                        <p class="producto__store__descripcion">${producto.descripcion}</p>
-                    </div>
-                    <div class="inferior__store">
-                        <div class="precio__store">$${producto.precio}</div>
-                        <div class="agregar">
-                            <button class="boton_agregar" data-id="${producto.id}">
-                                +AGREGAR
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            `;
-            listaDeProductos.innerHTML += tarjeta;
-        });
-        asignarListenersProductos();
-    }
+    catMap = new Map(categorias.map(c => [c.id, c.nombre]));
+    todosLosProductos = productos.filter(p => p.disponible && !p.eliminado);
+
+    // Enrich with category name for cart display
+    todosLosProductos.forEach(p => { p.categoriaNombre = catMap.get(p.categoriaId) ?? ""; });
+
+    cargarCategorias(categorias);
+    cargarProductos(todosLosProductos);
 }
 
-
-
-cargarProductos(PRODUCTS);
-cargarCategorias();
+init();

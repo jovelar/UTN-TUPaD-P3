@@ -1,6 +1,18 @@
 import type { CartItem } from "../../../types/product";
+import { getUSer } from "../../../utils/localStorage";
+import { navigate } from "../../../utils/navigate";
+import { logout } from "../../../utils/auth";
 
-const columnasCarrito = document.querySelector<HTMLElement>(".columnas_carrito");
+const raw = getUSer();
+if (!raw) navigate("/src/pages/auth/login/login.html");
+
+const user = raw ? JSON.parse(raw) : null;
+const spanUserName = document.getElementById("userName");
+if (spanUserName && user) spanUserName.textContent = user.nombre;
+
+document.getElementById("logoutButton")?.addEventListener("click", logout);
+
+const cartColumns = document.querySelector<HTMLElement>("#cartColumns");
 
 function modificarCantidad(id: number, accion: "sumar" | "restar") {
     const storage = localStorage.getItem("carrito");
@@ -10,38 +22,30 @@ function modificarCantidad(id: number, accion: "sumar" | "restar") {
     if (item) {
         if (accion === "sumar") item.cantidad += 1;
         else if (accion === "restar" && item.cantidad > 1) item.cantidad -= 1;
-        
         localStorage.setItem("carrito", JSON.stringify(carrito));
-        renderizarCarrito(); 
+        renderizarCarrito();
     }
 }
 
 function eliminarDelCarrito(id: number) {
     const storage = localStorage.getItem("carrito");
     let carrito: CartItem[] = storage ? JSON.parse(storage) : [];
-    const nuevoCarrito = carrito.filter(p => p.id !== id);
-    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
+    localStorage.setItem("carrito", JSON.stringify(carrito.filter(p => p.id !== id)));
     renderizarCarrito();
 }
 
-function asignarListenersCarrito() {
-    const botonesSumar = document.querySelectorAll<HTMLElement>(".boton_sumar");
-    const botonesRestar = document.querySelectorAll<HTMLElement>(".boton_restar");
-    const botonesEliminar = document.querySelectorAll<HTMLElement>(".boton_eliminar");
-    const botonLimpiar = document.querySelector<HTMLButtonElement>("#boton_limpiar");
-
-    botonesSumar.forEach(btn => {
+function asignarListeners() {
+    document.querySelectorAll<HTMLElement>(".cart-item__qty-btn--plus").forEach(btn => {
         btn.onclick = () => modificarCantidad(Number(btn.dataset.id), "sumar");
     });
-
-    botonesRestar.forEach(btn => {
+    document.querySelectorAll<HTMLElement>(".cart-item__qty-btn--minus").forEach(btn => {
         btn.onclick = () => modificarCantidad(Number(btn.dataset.id), "restar");
     });
-
-    botonesEliminar.forEach(btn => {
+    document.querySelectorAll<HTMLElement>(".cart-item__delete").forEach(btn => {
         btn.onclick = () => eliminarDelCarrito(Number(btn.dataset.id));
     });
 
+    const botonLimpiar = document.querySelector<HTMLButtonElement>("#botonLimpiar");
     if (botonLimpiar) {
         botonLimpiar.onclick = () => {
             localStorage.removeItem("carrito");
@@ -54,65 +58,53 @@ function renderizarCarrito() {
     const storage = localStorage.getItem("carrito");
     const carrito: CartItem[] = storage ? JSON.parse(storage) : [];
 
-    if (!columnasCarrito){
-        return;
-    }
+    if (!cartColumns) return;
+
     if (carrito.length === 0) {
-        columnasCarrito.innerHTML = `
-            <div class="carrito_vacio">
+        cartColumns.innerHTML = `
+            <div class="cart--empty">
                 <h2>El carrito está vacío</h2>
-                <div class="boton_volver"> 
-                    <a href="/src/pages/store/home/home.html">VOLVER</a>
-                </div>
+                <a href="/src/pages/store/home/home.html" class="btn btn--back">VOLVER A LA TIENDA</a>
             </div>`;
         return;
     }
 
     let htmlItems = "";
-    let totalGeneral = 0;
+    let total = 0;
 
-    carrito.forEach((item) => {
-        totalGeneral += item.precio * item.cantidad;
+    carrito.forEach(item => {
+        total += item.precio * item.cantidad;
         htmlItems += `
-            <article class="item_carrito">
-                <div class="imagen_producto">
-                    <img src="/src/img/${item.imagen}" width="50" alt="${item.nombre}">
-                </div>
-                <div class="producto_detalles">
+            <article class="cart-item">
+                <img src="/src/img/${item.imagen}" width="50" alt="${item.nombre}">
+                <div class="cart-item__details">
                     <h5>${item.nombre}</h5>
-                    <h6>${item.categorias.map(cat => cat.nombre).join(", ")}</h6>
+                    <h6>${item.categoriaNombre ?? ""}</h6>
                     <p>$${item.precio}</p>
                 </div>
-                <div class="producto_botones">
-                    <div class="variar_cantidad">                                
-                        <div class="boton_numero boton_sumar" data-id="${item.id}">+</div>
-                        <div class="numero_producto">${item.cantidad}</div>
-                        <div class="boton_numero boton_restar" data-id="${item.id}">-</div>
-                    </div>
-                    <div class="boton_eliminar" data-id="${item.id}">Eliminar</div>
+                <div class="cart-item__quantity">
+                    <button class="cart-item__qty-btn cart-item__qty-btn--plus" data-id="${item.id}">+</button>
+                    <span>${item.cantidad}</span>
+                    <button class="cart-item__qty-btn cart-item__qty-btn--minus" data-id="${item.id}">-</button>
                 </div>
+                <button class="cart-item__delete" data-id="${item.id}">Eliminar</button>
             </article>`;
     });
 
-    columnasCarrito.innerHTML = `
-        <section id="contenedor_carrito" class="inventario_carrito">
-            ${htmlItems}
-        </section>
-        <aside class="aside_resumen">
-            <h4>Resumen</h4>   
-            <span>Subtotal</span>
-            <span>$${totalGeneral}</span>
+    cartColumns.innerHTML = `
+        <section class="cart__items">${htmlItems}</section>
+        <aside class="cart__summary">
+            <h4>Resumen</h4>
+            <span>Subtotal: $${total}</span>
             <hr>
-            <strong>TOTAL</strong>
-            <strong>$${totalGeneral}</strong>
-            <div class="funciones_botones_resumen">
-                <button type="button">FINALIZAR</button>
-                <button type="button" id="boton_limpiar">Limpiar carrito</button>
-            </div>   
-        </aside>
-    `;
+            <strong>TOTAL: $${total}</strong>
+            <div class="cart__summary-actions">
+                <button class="btn btn--primary" type="button">FINALIZAR PEDIDO</button>
+                <button class="btn btn--danger" type="button" id="botonLimpiar">Limpiar carrito</button>
+            </div>
+        </aside>`;
 
-    asignarListenersCarrito();
+    asignarListeners();
 }
 
 renderizarCarrito();

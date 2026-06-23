@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "nombre": "Hamburguesa triple",
+        "precio": 25000.00,
+        "descripcion": "Hamburguesa triple smash",
+        "stock": 12,
+        "imagen": "/img/hamburguesa-triple.jpg",
+        "disponible": true,
+        "eliminado": false,
+        "categoriaId": 1
+    },
+    {
+        "id": 2,
+        "nombre": "Hamburguesa doble",
+        "precio": 18000.00,
+        "descripcion": "Doble medallón con cheddar",
+        "stock": 20,
+        "imagen": "/img/hamburguesa-doble.jpg",
+        "disponible": true,
+        "eliminado": false,
+        "categoriaId": 1
+    },
+    {
+        "id": 3,
+        "nombre": "Coca-Cola 500ml",
+        "precio": 2500.00,
+        "descripcion": "Gaseosa línea Coca-Cola",
+        "stock": 50,
+        "imagen": "/img/coca-500.jpg",
+        "disponible": true,
+        "eliminado": false,
+        "categoriaId": 2
+    },
+    {
+        "id": 4,
+        "nombre": "Agua mineral 500ml",
+        "precio": 1800.00,
+        "descripcion": "Agua sin gas",
+        "stock": 0,
+        "imagen": "/img/agua-500.jpg",
+        "disponible": false,
+        "eliminado": false,
+        "categoriaId": 2
+    },
+    {
+        "id": 5,
+        "nombre": "Papas fritas",
+        "precio": 6000.00,
+        "descripcion": "Porción de papas con cheddar",
+        "stock": 30,
+        "imagen": "/img/papas.jpg",
+        "disponible": true,
+        "eliminado": false,
+        "categoriaId": 1
+    }
+]

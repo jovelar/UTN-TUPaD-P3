@@ -1,40 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Food Store</title>
-        <link rel="stylesheet" href="/src/style.css">
-    </head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Store</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <header>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Inicio</a></li>
+                <li class="nav__link"><a href="/src/pages/client/orders/orders.html">Mis Pedidos</a></li>
+                <li class="nav__link"><a href="/src/pages/store/cart/cart.html">Carrito (<span id="cartCount">0</span>)</a></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </header>
 
-    <body class="contenedor_body">
-        <header>
-            <nav class="contenedor_nav">
-                <h1 class="titulo_nav">Food Store</h1>
-                <ul class="lista_nav">
-                    <li class="link_nav"><a href="/src/pages/store/home/home.html">Productos</a></li>
-                    <li class="link_nav"><a href="/src/pages/store/cart/cart.html">Carrito</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="contenedor_productos">
-            <aside>
-                <h3>categorias</h3>
-                <ul class="aside_categorias" id="listaDeCategorias">
+    <div class="store">
+        <aside class="store__sidebar">
+            <h3>Categorías</h3>
+            <ul class="store__categories" id="listaDeCategorias"></ul>
+        </aside>
+        <main class="store__content">
+            <input type="text" id="busqueda" class="store__search" placeholder="Buscar productos...">
+            <section id="listaDeProductos" class="store__products"></section>
+        </main>
+    </div>
 
-                </ul>
-            </aside>
-            <main class="contenido">
-                <div class="buscador">
-                    <input type="text" id="busqueda" class="input_buscador" placeholder="Ej: hamburguesas">
-                </div>
-                <section id="listaDeProductos" class="lista__productos__store">
-                </section>
-            </main>
-        </div>
-        <script type="module" src="/src/pages/store/home/home.ts"></script>
-    </body>
-    <footer>
-        Datos food store
-    </footer>
+    <footer>Datos food store</footer>
+    <script type="module" src="./home.ts"></script>
+</body>
 </html>
