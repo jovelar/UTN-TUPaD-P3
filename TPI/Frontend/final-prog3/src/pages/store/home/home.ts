@@ -19,6 +19,7 @@ let catMap: Map<number, string> = new Map();
 let categoriaActiva = 0; // 0 = todas las categorías
 
 function initGuard() {
+    console.log("CLASE BODY:", document.body.className, "ROL:", JSON.parse(getUSer()!).role);
     const raw = getUSer();
     if (!raw) {
         navigate("/src/pages/auth/login/login.html");
@@ -27,6 +28,10 @@ function initGuard() {
     const user = JSON.parse(raw);
     if (spanUserName) spanUserName.textContent = user.nombre;
     if (user.role === "ADMIN" && adminLink) adminLink.style.display = "";
+
+    //agrega una clase que luego se utilizar para ocultar los botones de agregar al carrito siendo admin
+    //dado que un admin no deberia tener carrito
+    if (user.role === "ADMIN") document.body.classList.add("es-admin"); 
     return true;
 }
 

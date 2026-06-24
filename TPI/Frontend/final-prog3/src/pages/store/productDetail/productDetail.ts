@@ -104,6 +104,8 @@ function initGuard() {
         navigate("/src/pages/auth/login/login.html");
         return false;
     }
+    const user = JSON.parse(raw);
+    if (user.role === "ADMIN") document.body.classList.add("es-admin");
     return true;
 }
 

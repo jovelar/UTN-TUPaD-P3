@@ -21,7 +21,8 @@
 } */
 :root {
     --color-primary: #ff5733;   /* naranja: marca, precios, acentos, botones */
-    --color-bg-page: #f9fafb;   /* gris muy claro: fondo general */
+    /*--color-bg-page: #f9fafb;   /* gris muy claro: fondo general */
+    --color-bg-page: #f5f6fa;
     --color-bg-card: #ffffff;   /* blanco: tarjetas, nav */
     --color-danger: #c53632;   /* rojo: eliminar, errores */
     --color-success: #10b981;   /* verde: badge "Disponible" */
@@ -84,7 +85,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .login-box__title{
-    color:var(--color-text-muted)
+    color:var(--color-primary)
 }
 
 .login-form__field {
@@ -507,8 +508,8 @@ h1, h2, h3, h4, h5, h6, p {
 
 .btn--back {
     text-align: center;
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
+    background-color: var(--color-border);
+    color: var(--color-text);
     padding: 0.4rem 1rem;
     border-radius: var(--radius-sm);
     display: inline-block;
@@ -530,14 +531,14 @@ h1, h2, h3, h4, h5, h6, p {
 .admin__sidebar {
     width: 200px;
     flex-shrink: 0;
-    background-color: var(--color-primary);
+    background-color: var(--color-bg-card);
     color: var(--color-text-light);
     padding: var(--gap-md);
     min-height: calc(100vh - 60px);
 }
 
 .admin__sidebar-header h3 {
-    color: var(--color-text-light);
+    color: var(--color-text);
     margin-bottom: 0.2rem;
 }
 
@@ -557,16 +558,25 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .admin__sidebar-nav a {
-    color: var(--color-text-light);
+    color: var(--color-text);
     display: block;
     padding: 0.3rem 0.5rem;
     border-radius: var(--radius-sm);
     transition: var(--transition);
 }
 
-.admin__sidebar-nav a:hover,
+/* .admin__sidebar-nav a:hover,
 .admin__sidebar-nav li.active a {
     background-color: rgba(255,255,255,0.15);
+} */
+.admin__sidebar-nav a:hover,
+.admin__sidebar-nav li.active a {
+    background-color: var(--color-primary);
+    border-radius: var(--radius-sm);
+}
+
+.admin__sidebar small{
+    color: var(--color-text);
 }
 
 .admin__content {
@@ -805,4 +815,19 @@ h1, h2, h3, h4, h5, h6, p {
     object-fit:scale-down;
     border-radius: var(--radius-md);
     flex-shrink: 0;
+}
+.product-detail__price{
+    color:var(--color-primary);
+    font-weight: bold;
+    font-size: large;
+}
+
+
+/* =============================================
+    AUX: desactivar boton "agregar..." siendo admin
+   ============================================= */
+
+.es-admin .product-card__btn,
+.es-admin #btnAgregar {
+    display: none;
 }

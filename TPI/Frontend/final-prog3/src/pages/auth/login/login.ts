@@ -5,6 +5,7 @@ import { navigate } from "../../../utils/navigate";
 interface UsuarioJSON {
     id: number;
     nombre: string;
+    apellido: string;
     mail: string;
     password: string;
     rol: Rol;
@@ -40,13 +41,14 @@ form.addEventListener("submit", async (e: SubmitEvent) => {
         return;
     }
 
-    const user: IUser = {
-        id: encontrado.id,
-        nombre: encontrado.nombre,
-        mail: encontrado.mail,
-        loggedIn: true,
-        role: encontrado.rol,
-    };
+const user: IUser = {
+    id: encontrado.id,
+    nombre: encontrado.nombre,
+    apellido: encontrado.apellido,
+    mail: encontrado.mail,
+    loggedIn: true,
+    role: encontrado.rol,
+};
 
     localStorage.setItem("userData", JSON.stringify(user));
 
