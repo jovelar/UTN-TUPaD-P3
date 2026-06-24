@@ -3,6 +3,8 @@ import { getUSer } from "../../../utils/localStorage";
 import { navigate } from "../../../utils/navigate";
 import { logout } from "../../../utils/auth";
 
+const ENVIO = 500; // costo fijo de envío (documentar en el README)
+
 const raw = getUSer();
 if (!raw) navigate("/src/pages/auth/login/login.html");
 
@@ -52,6 +54,11 @@ function asignarListeners() {
             renderizarCarrito();
         };
     }
+
+    const botonPagar = document.querySelector<HTMLButtonElement>("#botonPagar");
+    if (botonPagar) {
+        botonPagar.onclick = abrirCheckout;
+    }
 }
 
 function renderizarCarrito() {
@@ -70,10 +77,10 @@ function renderizarCarrito() {
     }
 
     let htmlItems = "";
-    let total = 0;
+    let subtotal = 0;
 
     carrito.forEach(item => {
-        total += item.precio * item.cantidad;
+        subtotal += item.precio * item.cantidad;
         htmlItems += `
             <article class="cart-item">
                 <img src="${item.imagen}" width="50" alt="${item.nombre}">
@@ -91,20 +98,106 @@ function renderizarCarrito() {
             </article>`;
     });
 
+    const total = subtotal + ENVIO;
+
     cartColumns.innerHTML = `
         <section class="cart__items">${htmlItems}</section>
         <aside class="cart__summary">
             <h4>Resumen</h4>
-            <span>Subtotal: $${total}</span>
+            <span>Subtotal: $${subtotal}</span>
+            <span>Envío: $${ENVIO}</span>
             <hr>
             <strong>TOTAL: $${total}</strong>
             <div class="cart__summary-actions">
-                <button class="btn btn--primary" type="button">FINALIZAR PEDIDO</button>
+                <button class="btn btn--primary" type="button" id="botonPagar">PROCEDER AL PAGO</button>
                 <button class="btn btn--danger" type="button" id="botonLimpiar">Limpiar carrito</button>
             </div>
         </aside>`;
 
     asignarListeners();
+}
+
+// ----- Checkout -----
+function abrirCheckout() {
+    // Crear el modal si no existe
+    let modal = document.getElementById("modalCheckout");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "modalCheckout";
+        modal.className = "modal";
+        modal.innerHTML = `
+            <div class="modal__content">
+                <button class="modal__close" id="cerrarCheckout">×</button>
+                <h3>Completar Pedido</h3>
+                <form id="formCheckout">
+                    <div class="form__group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" required placeholder="Ej: 1122334455">
+                    </div>
+                    <div class="form__group">
+                        <label for="formaPago">Forma de pago</label>
+                        <select id="formaPago" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="TARJETA">Tarjeta</option>
+                            <option value="TRANSFERENCIA">Transferencia</option>
+                            <option value="EFECTIVO">Efectivo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Confirmar Pedido</button>
+                </form>
+            </div>`;
+        document.body.appendChild(modal);
+
+        modal.querySelector("#cerrarCheckout")?.addEventListener("click", () => {
+            modal!.style.display = "none";
+        });
+
+        modal.querySelector("#formCheckout")?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            confirmarPedido();
+        });
+    }
+
+    modal.style.display = "flex";
+}
+
+function confirmarPedido() {
+    const storage = localStorage.getItem("carrito");
+    const carrito: CartItem[] = storage ? JSON.parse(storage) : [];
+    if (carrito.length === 0) return;
+
+    const formaPago = (document.getElementById("formaPago") as HTMLSelectElement).value;
+    if (!formaPago) { alert("Seleccioná una forma de pago."); return; }
+
+    const subtotal = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+    const total = subtotal + ENVIO;
+
+    // Generar el objeto pedido con la estructura de pedidos.json
+    const pedido = {
+        id: Date.now(), // id único simple
+        fecha: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+        estado: "PENDIENTE",
+        total,
+        formaPago,
+        idUsuario: user.id,
+        detalles: carrito.map(item => ({
+            idProducto: item.id,
+            cantidad: item.cantidad,
+            subtotal: item.precio * item.cantidad,
+        })),
+    };
+
+    // Guardar el pedido en localStorage (se acumulan en "pedidos")
+    const pedidosGuardados = localStorage.getItem("pedidos");
+    const pedidos = pedidosGuardados ? JSON.parse(pedidosGuardados) : [];
+    pedidos.push(pedido);
+    localStorage.setItem("pedidos", JSON.stringify(pedidos));
+
+    // Vaciar el carrito
+    localStorage.removeItem("carrito");
+
+    alert("¡Pedido confirmado!");
+    navigate("/src/pages/client/orders/orders.html");
 }
 
 renderizarCarrito();

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-261.23567.138">
+    <data-source name="jpa_db" uuid="bdedb50e-4535-45be-b3b3-97cd8932ab18">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="H2" />
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
