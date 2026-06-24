@@ -7,6 +7,8 @@ interface Categoria { id: number; nombre: string; }
 
 const listaDeProductos = document.querySelector<HTMLElement>("#listaDeProductos");
 const inputBusqueda = document.querySelector<HTMLInputElement>("#busqueda");
+const selectOrdenar = document.querySelector<HTMLSelectElement>("#ordenar");
+const selectCategoria = document.querySelector<HTMLSelectElement>("#filtroCategoria");
 const listaDeCategorias = document.querySelector<HTMLElement>("#listaDeCategorias");
 const spanUserName = document.getElementById("userName");
 const btnLogout = document.getElementById("logoutButton");
@@ -14,6 +16,7 @@ const adminLink = document.getElementById("adminLink");
 
 let todosLosProductos: Product[] = [];
 let catMap: Map<number, string> = new Map();
+let categoriaActiva = 0; // 0 = todas las categorías
 
 function initGuard() {
     const raw = getUSer();
@@ -29,15 +32,53 @@ function initGuard() {
 
 btnLogout?.addEventListener("click", logout);
 
-inputBusqueda?.addEventListener("input", () => {
-    const termino = inputBusqueda.value.toLowerCase();
-    const encontrados = todosLosProductos.filter(p =>
-        p.nombre.toLowerCase().includes(termino)
-    );
-    cargarProductos(encontrados.length ? encontrados : []);
-    if (!encontrados.length && listaDeProductos) {
-        listaDeProductos.innerHTML = `<p>No se encontraron productos para "${inputBusqueda.value}"</p>`;
+// inputBusqueda?.addEventListener("input", () => {
+//     const termino = inputBusqueda.value.toLowerCase();
+//     const encontrados = todosLosProductos.filter(p =>
+//         p.nombre.toLowerCase().includes(termino)
+//     );
+//     cargarProductos(encontrados.length ? encontrados : []);
+//     if (!encontrados.length && listaDeProductos) {
+//         listaDeProductos.innerHTML = `<p>No se encontraron productos para "${inputBusqueda.value}"</p>`;
+//     }
+// });
+
+// ----- Filtrado central: combina búsqueda + categoría + orden -----
+function aplicarFiltros() {
+    let resultado = [...todosLosProductos];
+
+    // Búsqueda por nombre
+    const texto = inputBusqueda?.value.trim().toLowerCase() ?? "";
+    if (texto) {
+        resultado = resultado.filter(p => p.nombre.toLowerCase().includes(texto));
     }
+
+    // Filtro por categoría
+    if (categoriaActiva !== 0) {
+        resultado = resultado.filter(p => p.categoriaId === categoriaActiva);
+    }
+
+    // Ordenamiento
+    const orden = selectOrdenar?.value ?? "";
+    if (orden === "nombre-asc")  resultado.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    else if (orden === "nombre-desc") resultado.sort((a, b) => b.nombre.localeCompare(a.nombre));
+    else if (orden === "precio-asc")  resultado.sort((a, b) => a.precio - b.precio);
+    else if (orden === "precio-desc") resultado.sort((a, b) => b.precio - a.precio);
+
+    // Repintar
+    if (resultado.length) {
+        cargarProductos(resultado);
+    } else if (listaDeProductos) {
+        listaDeProductos.innerHTML = `<p>No se encontraron productos</p>`;
+    }
+}
+
+inputBusqueda?.addEventListener("input", aplicarFiltros);
+selectOrdenar?.addEventListener("change", aplicarFiltros);
+selectCategoria?.addEventListener("change", () => {
+    categoriaActiva = Number(selectCategoria.value) || 0;
+    sincronizarSidebar();
+    aplicarFiltros();
 });
 
 function agregarAlCarrito(producto: Product) {
@@ -129,6 +170,7 @@ function cargarProductos(lista: Product[]) {
     asignarListenersProductos();
 }
 
+/*
 function cargarCategorias(categorias: Categoria[]) {
     if (!listaDeCategorias) return;
     let html = `<li class="store__category-item store__category-item--active" data-id="0">Todas las categorías</li>`;
@@ -136,21 +178,63 @@ function cargarCategorias(categorias: Categoria[]) {
         html += `<li class="store__category-item" data-id="${cat.id}">${cat.nombre}</li>`;
     });
     listaDeCategorias.innerHTML = html;
+*/
+function cargarCategorias(categorias: Categoria[]) {
+    if (!listaDeCategorias) return;
+
+    // CORRECCIÓN: Quitamos la clase '--active' para que inicie limpio
+    let html = `<li class="store__category-item" data-id="0">Todas las categorías</li>`;
+
+    categorias.forEach(cat => {
+        html += `<li class="store__category-item" data-id="${cat.id}">${cat.nombre}</li>`;
+    });
+    listaDeCategorias.innerHTML = html;
+
+    // ----- listener viejo (reemplazado por aplicarFiltros) -----
+    // document.querySelectorAll<HTMLElement>(".store__category-item").forEach(item => {
+    //     item.addEventListener("click", (e) => {
+    //         document.querySelectorAll(".store__category-item").forEach(el =>
+    //             el.classList.remove("store__category-item--active")
+    //         );
+    //         (e.currentTarget as HTMLElement).classList.add("store__category-item--active");
+
+    //         const id = Number((e.currentTarget as HTMLElement).dataset.id);
+    //         if (id === 0) {
+    //             cargarProductos(todosLosProductos);
+    //         } else {
+    //             cargarProductos(todosLosProductos.filter(p => p.categoriaId === id));
+    //         }
+    //     });
+    // });
 
     document.querySelectorAll<HTMLElement>(".store__category-item").forEach(item => {
         item.addEventListener("click", (e) => {
-            document.querySelectorAll(".store__category-item").forEach(el =>
-                el.classList.remove("store__category-item--active")
-            );
-            (e.currentTarget as HTMLElement).classList.add("store__category-item--active");
-
-            const id = Number((e.currentTarget as HTMLElement).dataset.id);
-            if (id === 0) {
-                cargarProductos(todosLosProductos);
-            } else {
-                cargarProductos(todosLosProductos.filter(p => p.categoriaId === id));
-            }
+            categoriaActiva = Number((e.currentTarget as HTMLElement).dataset.id);
+            if (selectCategoria) selectCategoria.value = categoriaActiva === 0 ? "" : String(categoriaActiva);
+            sincronizarSidebar();
+            aplicarFiltros();
         });
+    });
+}
+
+// ----- Llenar el select de categorías del toolbar -----
+function llenarSelectCategorias(categorias: Categoria[]) {
+    if (!selectCategoria) return;
+    categorias.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = String(cat.id);
+        option.textContent = cat.nombre;
+        selectCategoria.appendChild(option);
+    });
+}
+
+// ----- Mantener sidebar y select sincronizados -----
+function sincronizarSidebar() {
+    document.querySelectorAll<HTMLElement>(".store__category-item").forEach(el => {
+        el.classList.toggle(
+            "store__category-item--active",
+            Number(el.dataset.id) === categoriaActiva
+        );
     });
 }
 
@@ -171,6 +255,7 @@ async function init() {
     todosLosProductos.forEach(p => { p.categoriaNombre = catMap.get(p.categoriaId) ?? ""; });
 
     cargarCategorias(categorias);
+    llenarSelectCategorias(categorias);
     cargarProductos(todosLosProductos);
 }
 

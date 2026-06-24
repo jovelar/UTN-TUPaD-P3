@@ -1,9 +1,11 @@
 /* =============================================
    VARIABLES
    ============================================= */
-:root {
+/* :root {
     --color-primary:      #213931;
+    --color-primary2:    #
     --color-bg-page:      #f4f5f2;
+    --color-bg-page2:     #f5f6fa;
     --color-bg-card:      #fbfbfb;
     --color-danger:       #c53632;
     --color-border:       #e3e1df;
@@ -16,8 +18,25 @@
     --gap-md:             1rem;
     --gap-lg:             2rem;
     --transition:         0.3s ease;
+} */
+:root {
+    --color-primary: #ff5733;   /* naranja: marca, precios, acentos, botones */
+    --color-bg-page: #f9fafb;   /* gris muy claro: fondo general */
+    --color-bg-card: #ffffff;   /* blanco: tarjetas, nav */
+    --color-danger: #c53632;   /* rojo: eliminar, errores */
+    --color-success: #10b981;   /* verde: badge "Disponible" */
+    --color-border: #e5e7eb;   /* gris claro: bordes */
+    --color-text: #1f2937;   /* gris oscuro de verdad */
+    --color-text-light:#ffffff;   /* blanco: texto sobre fondo naranja */
+    --color-text-muted:#9ca3af;   /* gris medio: descripciones, hints */
+    --radius-sm:          5px;
+    --radius-md:          10px;
+    --radius-lg:          12px;
+    --gap-sm:             0.5rem;
+    --gap-md:             1rem;
+    --gap-lg:             2rem;
+    --transition:         0.3s ease;
 }
-
 /* =============================================
     RESET / BASE
    ============================================= */
@@ -90,9 +109,10 @@ h1, h2, h3, h4, h5, h6, p {
 }
 /* BLOCK: nav
    ============================================= */
-.nav {
+/* .nav {
     display: flex;
-    background-color: var(--color-primary);
+   
+    background-color: var(--color-bg-page);
     justify-content: space-between;
     align-items: center;
     max-width: 1980px;
@@ -101,7 +121,8 @@ h1, h2, h3, h4, h5, h6, p {
 
 .nav__brand {
     font-size: 2rem;
-    color: var(--color-text-light);
+   
+    color:var(--color-primary)
 }
 
 .nav__links {
@@ -119,31 +140,117 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .nav__link:hover {
-    background-color: var(--color-bg-page);
+  
+    background-color: var(--color-primary);
     border-radius: var(--radius-sm);
 }
 
 .nav__link button {
     background: none;
     border: none;
-    color: var(--color-text-light);
+   
     cursor: pointer;
     font-size: 1rem;
+} */
+
+/* =============================================
+   BLOCK: nav (Actualizado para coincidir con la imagen)
+   ============================================= */
+.nav {
+    display: flex;
+    background-color: var(--color-bg-card); /* Blanco (#ffffff) como en la imagen */
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%; /* O 1980px si prefieres limitar el ancho */
+    margin: 0 auto;
+    padding: 1rem 2rem; /* Le da aire arriba, abajo y a los lados */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Sutil línea de separación abajo */
 }
+
+.nav__brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary); /* El naranja de Food Store */
+}
+
+.nav__links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: var(--gap-lg); /* Más espacio entre cada elemento */
+    margin: 0;
+    padding: 0;
+}
+
+.nav__link {
+    list-style-type: none;
+}
+
+/* Estilo exacto para los textos de los enlaces */
+.nav__link a {
+    color: #374151; /* Gris oscuro elegante, legible sobre blanco */
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+/* Hover suave: solo cambia el texto a naranja al pasar el mouse */
+.nav__link a:hover {
+    color: var(--color-primary); 
+}
+
+/* El botón de Cerrar Sesión estilo píldora gris */
+.nav__link button#logoutButton {
+    background-color: #e5e7eb; /* Gris claro de fondo */
+    color: #374151;            /* Texto oscuro */
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.nav__link button#logoutButton:hover {
+    background-color: #d1d5db; /* Se oscurece un poco al pasar el mouse */
+}
+
+
+
 
 /* =============================================
    BLOCK: store
    ============================================= */
-.store {
+/*
+   .store {
     display: flex;
     align-items: flex-start;
     gap: var(--gap-lg);
     margin-top: 1.5rem;
+}*/
+
+.store {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-lg);
+    margin-top: 0; /* Cambiado de 1.5rem a 0 para pegarlo a la nav bar */
 }
 
+/*
 .store__sidebar {
     flex-shrink: 0;
     min-width: 150px;
+}
+*/
+.store__sidebar {
+    flex-shrink: 0;
+    min-width: 200px; /* Un poco más ancha para que respire el texto */
+    background-color: var(--color-bg-card); /* Forzamos el fondo blanco (#ffffff) */
+    padding: var(--gap-md); /* Le da margen interno para que el texto no toque los bordes */
+    border-radius: var(--radius-md); /* Esquinas redondeadas suaves */
+    border: 1px solid var(--color-border); /* Mismo borde sutil que tienen tus productos */
 }
 
 .store__sidebar h3 {
@@ -156,18 +263,27 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 0;
 }
 
+/*
 .store__category-item {
     padding: 5px;
     white-space: nowrap;
     cursor: pointer;
     transition: var(--transition);
 }
+*/
+
+.store__category-item {
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    color: #000000; /* O un gris oscuro */
+    border-radius: var(--radius-sm);
+}
 
 .store__category-item:hover,
 .store__category-item--active {
     background-color: var(--color-primary);
     border-radius: var(--radius-sm);
-    color: white;
 }
 
 .store__content {
@@ -658,4 +774,35 @@ h1, h2, h3, h4, h5, h6, p {
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-primary);
+}
+
+/* =============================================
+   BLOCK: product-detail
+   ============================================= */
+.product-detail {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: var(--gap-lg);
+}
+
+.product-detail__card {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-lg);
+}
+
+.product-detail__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    flex: 1;
+}
+
+.product-detail__card img {
+    width: 300px;
+    height: 300px;
+    object-fit:scale-down;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
 }

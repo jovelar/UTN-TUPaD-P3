@@ -6,25 +6,23 @@
     <title>Food Store - Detalle de Producto</title>
     <link rel="stylesheet" href="/src/style.css">
 </head>
-<body class="contenedor_body">
+<body>
     <header>
-        <nav class="contenedor_nav">
-            <h1 class="titulo_nav">Food Store</h1>
-            <ul class="lista_nav">
-                <li class="link_nav"><a href="/src/pages/store/home/home.html">Inicio</a></li>
-                <li class="link_nav"><a href="/src/pages/client/orders/orders.html">Mis Pedidos</a></li>
-                <li class="link_nav"><a href="/src/pages/store/cart/cart.html">Carrito (<span id="cartCount">0</span>)</a></li>
-                <li class="link_nav" id="adminLink" style="display:none"><a href="/src/pages/admin/adminHome/adminHome.html">Administración</a></li>
-                <li class="link_nav"><span id="userName"></span></li>
-                <li class="link_nav"><button id="logoutButton">Cerrar Sesión</button></li>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Inicio</a></li>
+                <li class="nav__link"><a href="/src/pages/client/orders/orders.html">Mis Pedidos</a></li>
+                <li class="nav__link"><a href="/src/pages/store/cart/cart.html">Carrito (<span id="cartCount">0</span>)</a></li>
+                <li class="nav__link" id="adminLink" style="display:none"><a href="/src/pages/admin/adminHome/adminHome.html">Administración</a></li>
+                <li class="nav__link"><span id="userName"></span></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
             </ul>
         </nav>
     </header>
 
-    <main class="contenedor_detalle">
-        <div id="productDetail" class="detalle_producto">
-            <!-- Populated by productDetail.ts -->
-        </div>
+    <main class="product-detail">
+        <section id="detalleProducto" class="product-detail__card"></section>
     </main>
 
     <footer>Datos food store</footer>
