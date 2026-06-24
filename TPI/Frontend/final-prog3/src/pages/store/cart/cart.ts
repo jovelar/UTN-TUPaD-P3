@@ -76,7 +76,7 @@ function renderizarCarrito() {
         total += item.precio * item.cantidad;
         htmlItems += `
             <article class="cart-item">
-                <img src="/src/img/${item.imagen}" width="50" alt="${item.nombre}">
+                <img src="${item.imagen}" width="50" alt="${item.nombre}">
                 <div class="cart-item__details">
                     <h5>${item.nombre}</h5>
                     <h6>${item.categoriaNombre ?? ""}</h6>
