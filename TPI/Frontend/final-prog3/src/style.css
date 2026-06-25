@@ -48,6 +48,7 @@
 body {
     background-color: var(--color-bg-page);
     margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 a {
@@ -624,10 +625,52 @@ h1, h2, h3, h4, h5, h6, p {
     text-decoration: underline;
 }
 
-.stat--categories { border-top: 4px solid #4caf50; }
-.stat--products   { border-top: 4px solid #2196f3; }
-.stat--orders     { border-top: 4px solid #ff9800; }
-.stat--available  { border-top: 4px solid #9c27b0; }
+.stat--categories { background-color: #6e5bac; }
+.stat--categories h4,
+.stat--categories span,
+.stat--categories a {
+    color: var(--color-bg-card);
+}
+.stat--products   { background-color: #f7689d; }
+.stat--products h4,
+.stat--products span,
+.stat--products a {
+    color: var(--color-bg-card);
+}
+
+.stat--orders     { background-color: #00dbf9; }
+.stat--orders h4,
+.stat--orders span,
+.stat--orders a {
+    color: var(--color-bg-card);
+}
+
+.stat--available  { background-color: #34e994; }
+.stat--available h4,
+.stat--available span,
+.stat--available a {
+    color: var(--color-bg-card);
+}
+#labelDisponibles {
+    color: var(--color-bg-card);
+}
+
+.stat__btn {
+    background-color: var(--color-bg-card);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+/*Junto con el selector de arriba, se cambia el color de cada texto de cada boton*/
+.stat--categories .stat__btn { color: #6e5bac; }
+.stat--products   .stat__btn { color: #f7689d; }
+.stat--orders     .stat__btn { color: #00dbf9; }
+.stat--available  .stat__btn { color: #34e994; }
+
+
 
 .resumen-rapido {
     background-color: var(--color-bg-card);
@@ -828,6 +871,141 @@ h1, h2, h3, h4, h5, h6, p {
    ============================================= */
 
 .es-admin .product-card__btn,
-.es-admin #btnAgregar {
+.es-admin #btnAgregar,
+.es-admin .nav__link--cart,
+.es-admin .nav__link--pedidos {
     display: none;
+}
+
+/* =============================================
+   BLOCK: order-detail (detalles al ahcer click sobre pedido)
+   ============================================= */
+.order-detail__status {
+    text-align: center;
+    margin-bottom: var(--gap-sm);
+}
+ 
+.order-detail__date {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--gap-md);
+}
+ 
+.order-detail__section {
+    background-color: var(--color-bg-page);
+    border-radius: var(--radius-md);
+    padding: var(--gap-md);
+    margin-bottom: var(--gap-md);
+}
+ 
+.order-detail__section-title {
+    font-weight: bold;
+    margin-bottom: var(--gap-sm);
+}
+ 
+.order-detail__info-line {
+    margin-bottom: 0.3rem;
+}
+ 
+.order-detail__info-line strong {
+    font-weight: bold;
+}
+ 
+.order-detail__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-sm);
+    padding: var(--gap-sm);
+    margin-bottom: var(--gap-sm);
+}
+ 
+.order-detail__row-name {
+    font-weight: bold;
+}
+ 
+.order-detail__row-sub {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+ 
+.order-detail__row-price {
+    color: var(--color-primary);
+    font-weight: bold;
+}
+ 
+.order-detail__costs {
+    background-color: var(--color-bg-page);
+    border-radius: var(--radius-md);
+    padding: var(--gap-md);
+    margin-bottom: var(--gap-md);
+}
+ 
+.order-detail__cost-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--gap-sm);
+}
+ 
+.order-detail__cost-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid var(--color-primary);
+    padding-top: var(--gap-sm);
+    margin-top: var(--gap-sm);
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+ 
+.order-detail__banner {
+    background-color: #fff3cd;
+    border: 1px solid #ffe69c;
+    border-radius: var(--radius-md);
+    padding: var(--gap-md);
+}
+ 
+.order-detail__banner strong {
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+/*ADMIN*/
+
+/* =============================================
+   BLOCK: btn--success (boton verde)
+   ============================================= */
+.btn--success {
+    background-color: var(--color-success);
+    color: var(--color-text-light);
+    width: 100%;
+    padding: 0.6rem;
+    font-weight: bold;
+}
+
+.btn--success:hover {
+    opacity: 0.85;
+}
+
+/* =============================================
+   BLOCK: order-detail__estado 
+   ============================================= */
+.order-detail__estado {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    margin-bottom: var(--gap-md);
+}
+
+.order-detail__estado label {
+    font-size: 0.9rem;
+}
+
+.order-detail__estado select {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
 }

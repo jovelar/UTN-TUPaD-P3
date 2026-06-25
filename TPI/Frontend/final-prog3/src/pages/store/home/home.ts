@@ -1,3 +1,4 @@
+import { actualizarContadorCarrito } from "../../../utils/cart";
 import type { Product, CartItem } from "../../../types/product";
 import { logout } from "../../../utils/auth";
 import { getUSer } from "../../../utils/localStorage";
@@ -98,6 +99,7 @@ function agregarAlCarrito(producto: Product) {
     }
 
     localStorage.setItem("carrito", JSON.stringify(carrito));
+    actualizarContadorCarrito();
     alert("Producto agregado al carrito");
 }
 
@@ -262,6 +264,7 @@ async function init() {
     cargarCategorias(categorias);
     llenarSelectCategorias(categorias);
     cargarProductos(todosLosProductos);
+    actualizarContadorCarrito();
 }
 
 init();

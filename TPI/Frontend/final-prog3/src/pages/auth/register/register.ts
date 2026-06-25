@@ -1,6 +1,15 @@
 type Rol = "ADMIN" | "USUARIO";
 
-    interface Usuario {
+interface IUser {
+    id: number;
+    nombre: string;
+    apellido: string;
+    mail: string;
+    loggedIn: boolean;
+    role: Rol;
+}
+
+interface UsuarioJSON {
     id: number;
     nombre: string;
     apellido: string;
@@ -8,15 +17,14 @@ type Rol = "ADMIN" | "USUARIO";
     celular: string;
     password: string;
     rol: Rol;
-    }
+}
 
-    type UsuarioEnSesion = Omit<Usuario, "password">;
+const form = document.querySelector<HTMLFormElement>(".login-box__form");
+const nombreInput = document.querySelector<HTMLInputElement>("#nombre");
+const emailInput = document.querySelector<HTMLInputElement>("#email");
+const passwordInput = document.querySelector<HTMLInputElement>("#password");
 
-    const form = document.querySelector<HTMLFormElement>(".login-box__form");
-    const emailInput = document.querySelector<HTMLInputElement>("#email");
-    const passwordInput = document.querySelector<HTMLInputElement>("#password");
-
-    function mostrarError(mensaje: string): void {
+function mostrarError(mensaje: string): void {
     let error = document.querySelector<HTMLParagraphElement>("#error");
     if (!error) {
         error = document.createElement("p");
@@ -25,55 +33,67 @@ type Rol = "ADMIN" | "USUARIO";
         form?.appendChild(error);
     }
     error.textContent = mensaje;
-    }
+}
 
-    function limpiarError(): void {
+function limpiarError(): void {
     document.querySelector("#error")?.remove();
-    }
+}
 
-    form?.addEventListener("submit", async (e: Event) => {
+form?.addEventListener("submit", async (e: Event) => {
     e.preventDefault();
     limpiarError();
 
+    const nombre = nombreInput?.value.trim() ?? "";
     const mail = emailInput?.value.trim() ?? "";
     const password = passwordInput?.value ?? "";
 
-    if (!mail || !password) {
-        mostrarError("Falta email y contraseña.");
+    // Validación de campos requeridos
+    if (!nombre || !mail || !password) {
+        mostrarError("Completá todos los campos.");
+        return;
+    }
+
+    // Validación básica de email
+    if (!mail.includes("@")) {
+        mostrarError("Ingresá un email válido.");
+        return;
+    }
+
+    // Validación de contraseña mínima
+    if (password.length < 4) {
+        mostrarError("La contraseña debe tener al menos 4 caracteres.");
         return;
     }
 
     try {
         const res = await fetch("/data/usuarios.json");
         if (!res.ok) throw new Error("No se pudo cargar usuarios.json");
-        const usuarios: Usuario[] = await res.json();
+        const usuarios: UsuarioJSON[] = await res.json();
 
-        const usuario = usuarios.find(
-        (u) => u.mail.toLowerCase() === mail.toLowerCase()
+        // Verificar que el email NO exista ya
+        const existe = usuarios.some(
+            (u) => u.mail.toLowerCase() === mail.toLowerCase()
         );
-
-        if (!usuario || usuario.password !== password) {
-        mostrarError("Email o contraseña incorrectos.");
-        return;
+        if (existe) {
+            mostrarError("Ya existe una cuenta con ese email.");
+            return;
         }
 
-        const usuarioEnSesion: UsuarioEnSesion = {
-        id: usuario.id,
-        nombre: usuario.nombre,
-        apellido: usuario.apellido,
-        mail: usuario.mail,
-        celular: usuario.celular,
-        rol: usuario.rol,
+        // Crear el usuario nuevo y guardar la sesión
+        const nuevoUsuario: IUser = {
+            id: Date.now(),
+            nombre: nombre,
+            apellido: "",
+            mail: mail,
+            loggedIn: true,
+            role: "USUARIO",
         };
-        localStorage.setItem("usuario", JSON.stringify(usuarioEnSesion));
+        localStorage.setItem("userData", JSON.stringify(nuevoUsuario));
 
-        if (usuario.rol === "ADMIN") {
-        window.location.href = "/src/pages/admin/adminHome/adminHome.html";
-        } else {
+        // Redirigir a la tienda
         window.location.href = "/src/pages/store/home/home.html";
-        }
     } catch (err) {
         mostrarError("Ocurrió un error. Intente de nuevo.");
         console.error(err);
     }
-    });
+});

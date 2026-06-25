@@ -1,4 +1,3 @@
-// TODO: implementar historial de pedidos del cliente
 import { getUSer } from "../../../utils/localStorage";
 import { navigate } from "../../../utils/navigate";
 import { logout } from "../../../utils/auth";
@@ -20,6 +19,14 @@ interface Pedido {
     idUsuario: number;
     detalles: DetallePedido[];
     eliminado?: boolean;
+    telefono?: string;
+    direccion?: string;
+    notas?: string;
+}
+
+interface Producto {
+    id: number;
+    nombre: string;
 }
 
 // ----- Guard -----
@@ -41,6 +48,7 @@ const modal = document.getElementById("modalDetalle") as HTMLElement;
 const modalContenido = document.getElementById("modalContenido") as HTMLElement;
 
 let pedidos: Pedido[] = [];
+let productoMap: Map<number, string> = new Map();
 
 const badgeClase: Record<Estado, string> = {
     PENDIENTE: "badge--pendiente",
@@ -90,22 +98,66 @@ function renderizarPedidos() {
     });
 }
 
+// ----- Mensajes del banner según estado del pedido -----
+const bannerEstado: Record<Estado, { titulo: string; texto: string }> = {
+    PENDIENTE: { titulo: " Tu pedido está siendo procesado", texto: "Te notificaremos cuando esté listo para entrega." },
+    CONFIRMADO: { titulo: "Tu pedido fue confirmado", texto: "Lo estamos preparando." },
+    TERMINADO: { titulo: " Tu pedido fue entregado", texto: "¡Gracias por tu compra!" },
+    CANCELADO: { titulo: " Tu pedido fue cancelado", texto: "Si fue un error, contactanos." },
+};
+
 // ----- Modal de detalle -----
 function abrirModalDetalle(id: number) {
     const pedido = pedidos.find(p => p.id === id);
     if (!pedido) return;
 
-    const productosHtml = pedido.detalles.map(d =>
-        `<li>Producto #${d.idProducto} — Cantidad: ${d.cantidad} — Subtotal: $${d.subtotal}</li>`
-    ).join("");
+    // Lista de productos con su nombre real (cruzado contra productos.json)
+    const productosHtml = pedido.detalles.map(d => {
+        const nombre = productoMap.get(d.idProducto) ?? `Producto #${d.idProducto}`;
+        const precioUnit = d.cantidad > 0 ? d.subtotal / d.cantidad : 0;
+        return `
+            <div class="order-detail__row">
+                <div>
+                    <div class="order-detail__row-name">${nombre}</div>
+                    <div class="order-detail__row-sub">Cantidad: ${d.cantidad} × $${precioUnit}</div>
+                </div>
+                <span class="order-detail__row-price">$${d.subtotal}</span>
+            </div>`;
+    }).join("");
+
+    // Desglose: subtotal = suma de subtotales de los detalles; envío = total - subtotal
+    const subtotal = pedido.detalles.reduce((sum, d) => sum + d.subtotal, 0);
+    const envio = pedido.total - subtotal;
+
+    const banner = bannerEstado[pedido.estado];
 
     modalContenido.innerHTML = `
-        <h3>Detalle del Pedido #${pedido.id}</h3>
-        <p>Estado: <span class="badge ${badgeClase[pedido.estado]}">${pedido.estado}</span></p>
-        <p>Fecha: ${pedido.fecha}</p>
-        <p>Forma de pago: ${pedido.formaPago}</p>
-        <ul>${productosHtml}</ul>
-        <p class="order-card__total">Total: $${pedido.total}</p>
+        <div class="order-detail__status">
+            <span class="badge ${badgeClase[pedido.estado]}">${pedido.estado}</span>
+        </div>
+        <p class="order-detail__date"> ${pedido.fecha}</p>
+
+        <div class="order-detail__section">
+            <p class="order-detail__section-title"> Información de Entrega</p>
+            <p class="order-detail__info-line"><strong>Dirección:</strong> ${pedido.direccion ?? "No especificada"}</p>
+            <p class="order-detail__info-line"><strong>Teléfono:</strong> ${pedido.telefono ?? "No especificado"}</p>
+            <p class="order-detail__info-line"><strong>Método de pago:</strong> ${pedido.formaPago}</p>
+            <p class="order-detail__info-line"><strong>Notas:</strong> ${pedido.notas ? pedido.notas : "Sin notas"}</p>
+        </div>
+
+        <p class="order-detail__section-title"> Productos</p>
+        ${productosHtml}
+
+        <div class="order-detail__costs">
+            <div class="order-detail__cost-line"><span>Subtotal:</span><span>$${subtotal}</span></div>
+            <div class="order-detail__cost-line"><span>Envío:</span><span>$${envio}</span></div>
+            <div class="order-detail__cost-total"><span>Total:</span><span>$${pedido.total}</span></div>
+        </div>
+
+        <div class="order-detail__banner">
+            <strong>${banner.titulo}</strong>
+            ${banner.texto}
+        </div>
     `;
 
     modal.style.display = "flex";
@@ -121,8 +173,14 @@ document.getElementById("cerrarModal")?.addEventListener("click", cerrarModal);
 
 // ----- Inicio: fetch + pedidos de localStorage, filtrados por usuario -----
 async function init() {
-    const res = await fetch("/data/pedidos.json");
-    const pedidosJSON: Pedido[] = await res.json();
+    const [resPedidos, resProductos] = await Promise.all([
+        fetch("/data/pedidos.json"),
+        fetch("/data/productos.json"),
+    ]);
+    const pedidosJSON: Pedido[] = await resPedidos.json();
+    const productos: Producto[] = await resProductos.json();
+
+    productoMap = new Map(productos.map(p => [p.id, p.nombre]));
 
     // Pedidos generados en el checkout (guardados en localStorage)
     const guardados = localStorage.getItem("pedidos");

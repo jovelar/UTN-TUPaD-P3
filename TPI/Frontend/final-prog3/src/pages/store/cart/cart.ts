@@ -135,6 +135,10 @@ function abrirCheckout() {
                         <input type="text" id="telefono" required placeholder="Ej: 1122334455">
                     </div>
                     <div class="form__group">
+                        <label for="direccion">Dirección de Entrega</label>
+                        <textarea id="direccion" required placeholder="Calle, número, piso, depto"></textarea>
+                    </div>
+                    <div class="form__group">
                         <label for="formaPago">Forma de pago</label>
                         <select id="formaPago" required>
                             <option value="">Seleccione una opción</option>
@@ -142,6 +146,10 @@ function abrirCheckout() {
                             <option value="TRANSFERENCIA">Transferencia</option>
                             <option value="EFECTIVO">Efectivo</option>
                         </select>
+                    </div>
+                    <div class="form__group">
+                        <label for="notas">Notas adicionales (opcional)</label>
+                        <textarea id="notas" placeholder="Instrucciones especiales, timbre, etc."></textarea>
                     </div>
                     <button type="submit" class="btn btn--primary">Confirmar Pedido</button>
                 </form>
@@ -169,6 +177,12 @@ function confirmarPedido() {
     const formaPago = (document.getElementById("formaPago") as HTMLSelectElement).value;
     if (!formaPago) { alert("Seleccioná una forma de pago."); return; }
 
+    const telefono = (document.getElementById("telefono") as HTMLInputElement).value;
+    if (!/^\d+$/.test(telefono)) { alert("El teléfono solo puede contener números."); return; }
+
+    const direccion = (document.getElementById("direccion") as HTMLTextAreaElement).value;
+    const notas = (document.getElementById("notas") as HTMLTextAreaElement).value;
+
     const subtotal = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
     const total = subtotal + ENVIO;
 
@@ -180,6 +194,9 @@ function confirmarPedido() {
         total,
         formaPago,
         idUsuario: user.id,
+        telefono,
+        direccion,
+        notas,
         detalles: carrito.map(item => ({
             idProducto: item.id,
             cantidad: item.cantidad,

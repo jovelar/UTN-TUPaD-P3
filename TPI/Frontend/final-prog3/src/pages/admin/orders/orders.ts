@@ -20,12 +20,20 @@ interface Pedido {
     idUsuario: number;
     detalles: DetallePedido[];
     eliminado?: boolean;
+    telefono?: string;
+    direccion?: string;
+    notas?: string;
 }
 
 interface Usuario {
     id: number;
     nombre: string;
     apellido: string;
+}
+
+interface Producto {
+    id: number;
+    nombre: string;
 }
 
 // ----- Guard: solo ADMIN -----
@@ -47,6 +55,7 @@ const modalContenido = document.getElementById("modalContenido") as HTMLElement;
 // Estado en memoria
 let pedidos: Pedido[] = [];
 let usuarioMap: Map<number, string> = new Map();
+let productoMap: Map<number, string> = new Map();
 
 // Clase de badge según estado
 const badgeClase: Record<Estado, string> = {
@@ -103,20 +112,47 @@ function abrirModalDetalle(id: number) {
 
     const cliente = usuarioMap.get(pedido.idUsuario) ?? "Cliente desconocido";
 
-    const productosHtml = pedido.detalles.map(d =>
-        `<li>Producto #${d.idProducto} — Cantidad: ${d.cantidad} — Subtotal: $${d.subtotal}</li>`
-    ).join("");
+    // Lista de productos con su nombre real (cruzado contra productos.json)
+    const productosHtml = pedido.detalles.map(d => {
+        const nombre = productoMap.get(d.idProducto) ?? `Producto #${d.idProducto}`;
+        const precioUnit = d.cantidad > 0 ? d.subtotal / d.cantidad : 0;
+        return `
+            <div class="order-detail__row">
+                <div>
+                    <div class="order-detail__row-name">${nombre}</div>
+                    <div class="order-detail__row-sub">Cantidad: ${d.cantidad} × $${precioUnit}</div>
+                </div>
+                <span class="order-detail__row-price">$${d.subtotal}</span>
+            </div>`;
+    }).join("");
+
+    // Desglose: subtotal = suma de subtotales de los detalles; envío = total - subtotal
+    const subtotal = pedido.detalles.reduce((sum, d) => sum + d.subtotal, 0);
+    const envio = pedido.total - subtotal;
 
     modalContenido.innerHTML = `
         <h3>Detalle del Pedido #${pedido.id}</h3>
-        <p>Cliente: ${cliente}</p>
-        <p>Fecha: ${pedido.fecha}</p>
-        <p>Forma de pago: ${pedido.formaPago}</p>
-        <ul>${productosHtml}</ul>
-        <p class="order-card__total">Total: $${pedido.total}</p>
 
-        <div class="form__group">
-            <label for="nuevoEstado">Cambiar estado:</label>
+        <div class="order-detail__section">
+            <p class="order-detail__info-line"><strong>Cliente:</strong> ${cliente}</p>
+            <p class="order-detail__info-line"><strong>Fecha:</strong> ${pedido.fecha}</p>
+            <p class="order-detail__info-line"><strong>Teléfono:</strong> ${pedido.telefono ?? "No especificado"}</p>
+            <p class="order-detail__info-line"><strong>Dirección:</strong> ${pedido.direccion ?? "No especificada"}</p>
+            <p class="order-detail__info-line"><strong>Método de pago:</strong> ${pedido.formaPago}</p>
+            <p class="order-detail__info-line"><strong>Notas:</strong> ${pedido.notas ? pedido.notas : "Sin notas"}</p>
+        </div>
+
+        <p class="order-detail__section-title">Productos:</p>
+        ${productosHtml}
+
+        <div class="order-detail__costs">
+            <div class="order-detail__cost-line"><span>Subtotal:</span><span>$${subtotal}</span></div>
+            <div class="order-detail__cost-line"><span>Envío:</span><span>$${envio}</span></div>
+            <div class="order-detail__cost-total"><span>Total:</span><span>$${pedido.total}</span></div>
+        </div>
+
+        <div class="order-detail__estado">
+            <label for="nuevoEstado">Cambiar Estado:</label>
             <select id="nuevoEstado">
                 <option value="PENDIENTE">Pendiente</option>
                 <option value="CONFIRMADO">Confirmado</option>
@@ -124,7 +160,7 @@ function abrirModalDetalle(id: number) {
                 <option value="CANCELADO">Cancelado</option>
             </select>
         </div>
-        <button id="btnGuardarEstado" class="btn btn--primary">Actualizar Estado</button>
+        <button id="btnGuardarEstado" class="btn btn--success">Actualizar Estado</button>
     `;
 
     // Dejar seleccionado el estado actual
@@ -149,16 +185,19 @@ function cerrarModal() {
 filtroEstado.addEventListener("change", renderizarPedidos);
 document.getElementById("cerrarModal")?.addEventListener("click", cerrarModal);
 
-// ----- Inicio: fetch de pedidos y usuarios -----
+// ----- Inicio: fetch de pedidos, usuarios y productos -----
 async function init() {
-    const [resPedidos, resUsuarios] = await Promise.all([
+    const [resPedidos, resUsuarios, resProductos] = await Promise.all([
         fetch("/data/pedidos.json"),
         fetch("/data/usuarios.json"),
+        fetch("/data/productos.json"),
     ]);
     pedidos = await resPedidos.json();
     const usuarios: Usuario[] = await resUsuarios.json();
+    const productos: Producto[] = await resProductos.json();
 
     usuarioMap = new Map(usuarios.map(u => [u.id, `${u.nombre} ${u.apellido}`]));
+    productoMap = new Map(productos.map(p => [p.id, p.nombre]));
 
     renderizarPedidos();
 }

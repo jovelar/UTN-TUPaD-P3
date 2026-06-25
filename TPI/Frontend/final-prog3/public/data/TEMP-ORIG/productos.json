@@ -5,7 +5,7 @@
     "precio": 4500,
     "descripcion": "Carne 150g, lechuga, tomate, cebolla morada y mayonesa",
     "stock": 50,
-    "imagen": "https://thumbs.dreamstime.com/b/primer-cl%C3%A1sico-de-la-hamburguesa-120662126.jpg",
+    "imagen": "https://foodish-api.com/images/burger/burger1.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 1
@@ -16,7 +16,7 @@
     "precio": 6200,
     "descripcion": "Doble carne 150g c/u, cheddar, panceta y salsa barbacoa",
     "stock": 40,
-    "imagen": "https://progcarne.com/storage/app/uploads/public/608/6d1/8b0/6086d18b065a7811052900.jpg",
+    "imagen": "https://foodish-api.com/images/burger/burger2.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 1
@@ -27,7 +27,7 @@
     "precio": 5500,
     "descripcion": "Carne 150g, huevo, jamón, queso, lechuga y tomate",
     "stock": 30,
-    "imagen": "https://www.lanacion.com.ar/resizer/v2/la-hamburguesa-completa-de-mauro-colagreco-en-5JZ4X4MXUJCYDDGUBK27UWDJDQ.jpeg?auth=e68ee65dc050d7d9e4e45b0529463bf074bc39c9cd3681f73532905345278912&width=420&height=481&quality=70&smart=true",
+    "imagen": "https://foodish-api.com/images/burger/burger3.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 1
@@ -49,7 +49,7 @@
     "precio": 3800,
     "descripcion": "Mozzarella, salsa de tomate y orégano",
     "stock": 25,
-    "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXiEN1-TsE-CzLFTBv073BZ8Md8N6kVjOBg7jXApvWFXzkpmBjQY1suPs&s=10",
+    "imagen": "https://foodish-api.com/images/pizza/pizza1.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 2
@@ -60,7 +60,7 @@
     "precio": 4500,
     "descripcion": "Mozzarella, rodajas de tomate, ajo, aceitunas y albahaca",
     "stock": 25,
-    "imagen": "https://media.elgourmet.com/article/8metlvp345_portada-pizza.jpg",
+    "imagen": "https://foodish-api.com/images/pizza/pizza2.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 2
@@ -71,7 +71,7 @@
     "precio": 4800,
     "descripcion": "Mozzarella, cebolla caramelizada, jamón y aceitunas",
     "stock": 20,
-    "imagen": "https://saborargento.com.ar/wp-content/uploads/2023/05/Receta-de-Pizza-Fugazzeta.jpg",
+    "imagen": "https://foodish-api.com/images/pizza/pizza3.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 2
@@ -82,7 +82,7 @@
     "precio": 5200,
     "descripcion": "Mozzarella, pepperoni, morrón, cebolla, huevo y aceitunas",
     "stock": 15,
-    "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv5bVuCUB3paHqcEvGWsJWR3-6uykzMqt_pltweVE2ObUG_Xlk36BTViSY&s=10",
+    "imagen": "https://foodish-api.com/images/pizza/pizza4.jpg",
     "disponible": true,
     "eliminado": false,
     "categoriaId": 2
