@@ -1,4 +1,5 @@
 package com.tp.jpa.model;
+
 import com.tp.jpa.model.enums.Estado;
 import com.tp.jpa.model.enums.FormaPago;
 import jakarta.persistence.*;
@@ -6,85 +7,79 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "pedidos")
 @Getter
 @Setter
-@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of={"fecha","estado"},callSuper = true)
 @SuperBuilder
-
-@Entity
-@Table(name = "Pedidos")
+@ToString(callSuper = true, exclude = {"detalles"})
+@EqualsAndHashCode(callSuper = true)
 public class Pedido extends Base implements Calculable {
-    @Column(name="fecha")
-    private LocalDate fecha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="estado")
-    private Estado estado;
-
-    @Column(name="total")
-    private Double total;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name="forma_pago")
-    private FormaPago formaPago;
+    @Column(name = "fecha", updatable = false)
     @Builder.Default
+    private LocalDate fecha = LocalDate.now();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="pedido_id")
-    private Set<DetallePedido>detalles= new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado",nullable = false, length = 30)
+    @Builder.Default
+    private Estado estado = Estado.PENDIENTE;
 
-    public void addDetallePedido(int cantidad, Producto producto){
-        //DetallePedido dp = new DetallePedido(id,LocalDateTime.now(),producto,cantidad);
-        DetallePedido dp = DetallePedido.builder()
+    @Column(name = "total", nullable = false)
+    @Builder.Default
+    private Double total = 0.0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "forma_pago",nullable = false, length = 20)
+    private FormaPago formaPago;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "pedido_id")
+    @Builder.Default
+    private Set<DetallePedido> detalles = new HashSet<>();
+
+    public void addDetallePedido(int cantidad, Producto producto) {
+        DetallePedido detalle = DetallePedido.builder()
                 .cantidad(cantidad)
-                .subTotal(0)
                 .producto(producto)
-
-                .eliminado(false)
-                .createdAt(LocalDateTime.now())
-
+                .subtotal(producto.getPrecio() * cantidad)
                 .build();
-        detalles.add(dp);
-    }
 
-    public DetallePedido findDetallePedidoByProducto(Producto p){
-        DetallePedido detalleBuscado = null;
-
-        for(DetallePedido d : detalles ){
-            if(d.getProducto().equals(p)){
-                detalleBuscado=d;
-                break;
-            }
-        }
-        return detalleBuscado;
-    }
-
-    public void deleteDetallePedidoByProducto(Producto producto){
-        DetallePedido aEliminar=null;
-        for(DetallePedido d: detalles){
-            if(d.getProducto().equals(producto)){
-                //guardar referencia para luego eliminar fuera del bucle
-                aEliminar=d;
-                break;
-            }
-        }
-
-        if(aEliminar!=null){
-            detalles.remove(aEliminar);
-        }
+        this.detalles.add(detalle);
+        this.total += detalle.getSubtotal();
     }
 
     @Override
     public void calcularTotal() {
-        total=detalles.stream()
-                .mapToDouble(DetallePedido::getSubTotal)
-                .sum();
+        double acumulador = 0.0;
+        for (DetallePedido detalle : detalles) {
+            if (detalle.getSubtotal() != null) {
+                acumulador += detalle.getSubtotal();
+            }
+        }
+        this.total = acumulador;
+    }
+
+    public DetallePedido findDetallePedidoByProducto(Producto producto) {
+        for (DetallePedido detalle : detalles) {
+            if (detalle.getProducto() != null &&
+                    detalle.getProducto().getId().equals(producto.getId())) {
+                return detalle;
+            }
+        }
+        return null;
+    }
+
+    public void deleteDetallePedidoByProducto(Producto producto) {
+        DetallePedido detalleEncotrado = findDetallePedidoByProducto(producto);
+        if (detalleEncotrado != null) {
+            detalles.remove(detalleEncotrado);
+            calcularTotal();
+        }
     }
 }

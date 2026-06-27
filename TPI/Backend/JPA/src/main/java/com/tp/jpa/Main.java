@@ -1,461 +1,582 @@
-//URL DEL VIDEO
-//https://youtu.be/AbcKO4Cuc0Y
-
 package com.tp.jpa;
-import com.tp.jpa.model.Categoria;
-import com.tp.jpa.model.Pedido;
-import com.tp.jpa.model.Producto;
-import com.tp.jpa.model.Usuario;
-import com.tp.jpa.repository.*;
-import com.tp.jpa.util.JPAUtil;
 
+import com.tp.jpa.model.enums.Estado;
+import com.tp.jpa.model.*;
+import com.tp.jpa.model.enums.FormaPago;
+import com.tp.jpa.model.enums.Rol;
+import com.tp.jpa.repository.CategoriaRepository;
+import com.tp.jpa.repository.PedidoRepository;
+import com.tp.jpa.repository.ProductoRepository;
+import com.tp.jpa.repository.UsuarioRepository;
+import com.tp.jpa.util.JPAUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
+import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-
+/**
+ * Clase principal: menú de consola del sistema Food Store.
+ * Orden de uso natural: Categorías -> Productos -> Usuarios -> Pedidos.
+ */
 public class Main {
 
-    //para que sean accesibles a todos
-    private static final ProductoRepository productoRepo = new ProductoRepository();
+    private static final Scanner sc = new Scanner(System.in);
+
     private static final CategoriaRepository categoriaRepo = new CategoriaRepository();
-
-    public static void mostrarProducto(Producto p) {
-        System.out.println(p);
-    }
-
-    public static void mostrarProductos(Categoria cat) {
-        for (Producto p : cat.getProductos()) {
-            mostrarProducto(p);
-        }
-    }
-
-    public static void mostrarCategoriasYProductos(Set<Categoria> categorias) {
-        for (Categoria c : categorias) {
-            System.out.println("\n");
-            System.out.println("###" + c + "###");
-            mostrarProductos(c);
-        }
-    }
-
-    public static void mostrarPedido(Pedido p) {
-        System.out.println(p);
-    }
-
-    public static void mostrarPedidos(Usuario usuario) {
-        for (Pedido p : usuario.getPedidos()) {
-            mostrarPedido(p);
-        }
-    }
-
-    public static void mostrarUsuario(Usuario u) {
-        System.out.println(u);
-    }
-
-    public static void mostrarUsuarioConMasPedidos(Set<Usuario> usuarios) {
-        Usuario usuarioMayor = null;
-
-        for (Usuario u : usuarios) {
-            if (usuarioMayor == null || u.getPedidos().size() > usuarioMayor.getPedidos().size()) {
-                usuarioMayor = u;
-            }
-        }
-        System.out.println("El usuario con mas pedidos es :\n");
-        System.out.println(usuarioMayor);
-        System.out.println("\n Sus pedidos: \n");
-        mostrarPedidos(usuarioMayor);
-    }
-
-    public static void compararConProducto(Producto producto, Set<Categoria> categorias) {
-        for (Categoria c : categorias) {
-            Set<Producto> listaProductos = c.getProductos();
-            for (Producto p : listaProductos) {
-                System.out.println("Comparando: " + p.getNombre() + " con " + producto.getNombre() + " : " + p.equals(producto));
-            }
-        }
-    }
+    private static final ProductoRepository productoRepo = new ProductoRepository();
+    private static final UsuarioRepository usuarioRepo = new UsuarioRepository();
+    private static final PedidoRepository pedidoRepo = new PedidoRepository();
 
     public static void main(String[] args) {
+        boolean salir = false;
+        while (!salir) {
+            System.out.println();
+            System.out.println("===== FOOD STORE - MENÚ PRINCIPAL =====");
+            System.out.println("1. Gestionar Categorías");
+            System.out.println("2. Gestionar Productos");
+            System.out.println("3. Gestionar Usuarios");
+            System.out.println("4. Gestionar Pedidos");
+            System.out.println("5. Reportes");
+            System.out.println("0. Salir");
+            System.out.print("Opción: ");
+            String op = sc.nextLine().trim();
+            switch (op) {
+                case "1": menuCategorias(); break;
+                case "2": menuProductos(); break;
+                case "3": menuUsuarios(); break;
+                case "4": menuPedidos(); break;
+                case "5": menuReportes(); break;
+                case "0": salir = true; break;
+                default: System.out.println("Opción inválida.");
+            }
+        }
+        JPAUtil.close();
+        System.out.println("Aplicación finalizada.");
+    }
 
-        Scanner scan= new Scanner(System.in);
-        List<Categoria> categorias=categoriaRepo.listarActivos();
+    // ── Submenús ─────────────────────────────────────────────────
 
-        int opcion=0;
+    private static void menuCategorias() {
+        // TODO: Implementar submenú de Categorías.
+        // Opciones: 1-Alta  2-Modificar  3-Baja lógica  4-Listado  0-Volver
+        String opcMenuCat="asd";
         do{
-            opcion=menuPrincipal(scan);
-            switch(opcion){
-                case 0:
+            System.out.println("\n\n####### CATEGORIAS #######");
+            System.out.println("1- Alta");
+            System.out.println("2- Modificar");
+            System.out.println("3- Baja logica");
+            System.out.println("4- Listado");
+            System.out.println("\n\n0- Volver");
+            opcMenuCat = sc.nextLine();
+
+            switch(opcMenuCat){
+                case "0":
                     break;
+                case "1":
+                        String nuevoNombreCat="";
+                        do{
+                            System.out.println("Ingrese una nombre: ");
+                            nuevoNombreCat=sc.nextLine();
+                            if(nuevoNombreCat.isEmpty()){
+                                System.out.println("\n Debe ingresar un nombre!");
+                            }
+                        }while(nuevoNombreCat.isEmpty());
 
-                case 1:
-                    int opcCat=0;
-                    do{
-                        opcCat=menuABMCategorias(scan);
-                        switch(opcCat){
-                            case 0:
-                                break;
-                            case 1://Cat Nueva
-                                scan.nextLine();//para limpiar el buffer del teclado
-                                System.out.println("Ingrese el nombre de la categoria: ");
-                                String nuevoNombCat=scan.nextLine();
-                                System.out.println("Ingrese una descripcion");
-                                String nuevoDescCat=scan.nextLine();
-                                Categoria nuevaCat= Categoria.builder()
-                                        .nombre(nuevoNombCat)
-                                        .descripcion(nuevoDescCat)
-                                        .eliminado(false)
-                                        .build();
+                        System.out.println("Ingrese una descripcion");
+                        String nuevoNombreDesc=sc.nextLine();
 
+                        Categoria nuevaCat=Categoria.builder().nombre(nuevoNombreCat)
+                                .descripcion(nuevoNombreDesc)
+                                .build();
+                        categoriaRepo.guardar(nuevaCat);
+                        System.out.println("Categoria agregada con el id: "+nuevaCat.getId()+"!");
 
-                                boolean existe = false;
-                                for (Categoria c : categorias) {
-                                    if (c.getNombre().equals(nuevoNombCat)) { // Comparación directa
-                                        existe = true;
-                                        break;
+                    break;
+                case "2":
+                    System.out.println("Mostrando categorias activas: \n");
+                    List<Categoria> cat=categoriaRepo.listarActivos();
+                    if(!cat.isEmpty()){
+                        mostrarCategorias(cat);
+                        System.out.println("Seleccione el ID de la categoria que desea modificar");
+
+                        //Ya que tenemos en memoria las categorias, trabajamos con ellas
+                        boolean encontrado=false;
+                        try{
+                            Long idAModificar=Long.parseLong(sc.nextLine().trim());
+                            for(Categoria c:cat){
+                                if(c.getId().equals(idAModificar)){
+                                    encontrado=true;
+                                    Categoria catModi=c;
+                                    System.out.println("Ingrese un nuevo nombre [ENTER] para mantener el actual ("+c.getNombre()+")");
+                                    String nombreTemp=sc.nextLine();
+                                    if(!nombreTemp.isEmpty()){
+                                        catModi.setNombre(nombreTemp);
                                     }
-                                }
-
-                                if(!existe){
-                                    categoriaRepo.guardar(nuevaCat);
-                                    System.out.println("Categoria guardada!");
-
-                                }else{
-                                    System.out.println("La categoria ya existe");
-                                }
-                                break;
-
-
-                            case 2://baja
-                                System.out.println("Ingrese el ID de la categoria a eliminar");
-                                Long idAeliminar=scan.nextLong();
-
-                                Boolean eliminado= categoriaRepo.eliminarLogico(idAeliminar);
-                                if(eliminado){
-                                    System.out.println("La categoria fue eliminada");
-                                }else{
-                                    System.out.println("La categoria con el ID facilitado no existe");
-                                }
-
-                                break;
-                            case 3://modificar
-                                System.out.println("++++++++ MODIFICAR ++++++++");
-                                System.out.println("Ingrese el ID a modificar: ");
-                                long idAmodificar=scan.nextLong();
-
-                                Categoria catAmodificar=null;
-                                for(Categoria c: categorias){
-                                    if(c.getId()==idAmodificar){
-                                        catAmodificar=c;
-                                        break;
+                                    System.out.println("Ingrese una nueva descripcion [ENTER] para mantener el actual ("+c.getDescripcion()+")");
+                                    String descripTemp=sc.nextLine();
+                                    if(!descripTemp.isEmpty()){
+                                        catModi.setDescripcion(descripTemp);
                                     }
+                                    categoriaRepo.guardar(catModi);
+                                    System.out.println("Categoria actualizada!");
+                                    break;
                                 }
-                                if(catAmodificar!=null){
-                                    scan.nextLine();//limpia buffer
-                                    System.out.println("Ingrese el nuevo nombre de la categoria: (actual es " + catAmodificar.getNombre() + ")");
-                                    catAmodificar.setNombre(scan.nextLine());
-                                    System.out.println("Ingrese la nueva descripcion: (actual: "+catAmodificar.getDescripcion()+")");
-                                    catAmodificar.setDescripcion(scan.nextLine());
+                            }
+                        }catch (NumberFormatException e){
+                            System.out.print("Fomato de ID invalido");
 
-                                    categoriaRepo.guardar(catAmodificar);
-                                }else{
-                                    System.out.println("La categoria no existe");
-                                }
-
-                                break;
-                            case 4://listar
-                                System.out.println("******** LISTA DE CATEGORIAS ********");
-                                List<Categoria> categoriasAListar=categoriaRepo.listarActivos();
-                                if(categoriasAListar.size()!=0){
-                                    mostrarCategorias(categoriasAListar);
-                                }else{
-                                    System.out.println("No hay categorias para mostrar");
-                                }
-                                break;
+                            //Para que no muestre el error de no encontrado!
+                            encontrado=true;
                         }
-                    }while(opcCat!=0);
-                    break;
-
-                case 2:
-                    int opcProd=0;
-                    do{
-                        opcProd=menuABMproducto(scan);
-                        switch(opcProd){
-                            case 0:
-                                break;
-                            case 1://Crear
-                                List<Categoria> categoriasNuevoProd = categoriaRepo.listarActivos();
-                                if(categoriasNuevoProd.size()>0){
-                                    long eleccionID;
-                                    Categoria eleccionCategoria=null;
-                                    do{
-
-                                        System.out.println("Ingrese el ID de la categoria seleccionada de la siguiente lista");
-                                        mostrarCategorias(categoriasNuevoProd);
-                                        eleccionID=scan.nextLong();
-
-                                        //Se busca si el ID existe
-                                        for(Categoria c :categoriasNuevoProd){
-                                            if(c.getId()==eleccionID){
-                                                eleccionCategoria=c;
-                                            }
-                                        }
-                                        if(eleccionCategoria==null){
-                                            System.out.println("ID incorrecto, seleccione uno de la lista");
-                                        }
-                                    }while(eleccionCategoria==null);
-
-                                    String nombreNuevoProd=null;
-
-                                    scan.nextLine();//limpiando buffer
-                                    do{
-                                        System.out.println("Ingrese el nombre");
-                                        nombreNuevoProd=scan.nextLine();
-                                    }while(nombreNuevoProd.isBlank());
-                                    
-                                    double nuevoProdPrecio=0.0; //Por defecto
-                                    System.out.println("Ingrese el precio");
-                                    nuevoProdPrecio=scan.nextInt();
-
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("Ingrese una descripcion: ");
-                                    String nuevoProdDescrip=scan.nextLine();
-
-                                    scan.nextLine();//limpiando buffer
-                                    int nuevoProdStock=1;//por defecto
-                                    System.out.println("Ingrese el stock, por defecto es 1");
-                                    nuevoProdStock=scan.nextInt();
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("Ingrese el nombre del archivo de imagen: ");
-                                    String nuevoProdImagen=scan.nextLine();
-                                    
-                                    Producto nuevoProducto=Producto.builder()
-                                            .nombre(nombreNuevoProd)
-                                            .precio(nuevoProdPrecio)
-                                            .descripcion(nuevoProdDescrip)
-                                            .stock(nuevoProdStock).imagen(nuevoProdImagen)
-                                            .disponible(true)
-                                            .categoria(eleccionCategoria)
-                                            .eliminado(false)
-                                            .createdAt(LocalDateTime.now())
-                                            .build();
-                                    productoRepo.guardar(nuevoProducto);
-                                    System.out.println("Producto agregado!");
-
-                                }else{
-                                    System.out.println("No existen categorias definidas aun, primero debe crear una para poder incorporar un producto");
-                                }
-                                break;
-                            case 2://Borrado logico
-                                scan.nextLine();//limpiando buffer
-                                List<Producto>listaDeProductos=productoRepo.listarActivos();
-                                if(listaDeProductos.size()>0){
-                                    Boolean estadoEliminado=false;
-                                    Long idAeliminar;
-                                    do{
-                                        System.out.println("Ingrese el ID del producto a dar de baja de la siguiente lista: ");
-                                        mostrarListaProductos(listaDeProductos);
-                                        idAeliminar=scan.nextLong();
-                                        estadoEliminado=productoRepo.eliminarLogico(idAeliminar);
-                                        if(estadoEliminado==false){
-                                            System.out.println("ID invalido");
-                                        }
-                                        else{
-                                            System.out.println("\n\n Producto eliminado! \n\n");
-                                        }
-
-                                    }while(estadoEliminado==false);
-
-                                }else{
-                                    System.out.println("No hay productos para eliminar");
-                                }
-                                break;
-                            case 3://Modificar
-                                List<Producto>listaProducto=productoRepo.listarActivos();
-                                if(listaProducto.size()>0){
-                                    Producto productoAModificar=null;
-                                    Long idAModificar;
-                                    do{
-                                        System.out.println("Ingrese un ID de producto de la siguiente lista: ");
-                                        mostrarListaProductos(listaProducto);
-                                        idAModificar=scan.nextLong();
-                                        for(Producto c: listaProducto){
-                                            if(c.getId()==idAModificar){
-                                                productoAModificar=c;
-                                                break;
-                                            }
-                                        }
-                                    }while (productoAModificar==null);
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("Ingrese el nuevo nombre: (actual: "+productoAModificar.getNombre()+")");
-                                    productoAModificar.setNombre(scan.nextLine());
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("Ingrese el nuevo precio: (actual: $"+productoAModificar.getPrecio()+")");
-                                    productoAModificar.setPrecio(scan.nextDouble());
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("ingrese la nueva descripcion: (actual: "+productoAModificar.getDescripcion()+ ")");
-                                    productoAModificar.setDescripcion(scan.nextLine());
-
-                                    scan.nextLine();//limpiando buffer
-                                    System.out.println("Ingrese el nuevo stock: (actual:"+productoAModificar.getStock()+")");
-                                    productoAModificar.setStock(scan.nextInt());
-
-                                    System.out.println("Ingrese la nueva imagen: (actual:"+productoAModificar.getImagen()+")");
-                                    productoAModificar.setImagen(scan.nextLine());
-
-                                    productoRepo.guardar(productoAModificar);
-
-                                    System.out.println("\nSe actualizo el producto!\n");
-
-
-                                }else{
-                                    System.out.println("No hay productos para modificar");
-                                }
-
-
-                                break;
-                            case 4://Listar
-                                System.out.println("\n\n\n%%%%%%%% LISTA DE PRODUCTOS DISPONIBLES %%%%%%%%");
-                                List<Producto>listaProductos = productoRepo.listarActivos();
-                                if(listaProductos.size()>0){
-                                    mostrarListaProductos(listaProductos);
-
-                                }else{
-                                    System.out.println("\n\nNo hay productos en la categoria\n\n");
-                                }
-                                break;
-                            default:
-                                break;
+                        if(!encontrado){
+                            System.out.println("Id no encontrado!\n");
                         }
-                    }while(opcProd!=0);
+
+                    }else{
+                        System.out.println("No hay categorias para mostrar");
+                    }
                     break;
+                case "3":
+                    mostrarCategorias(categoriaRepo.listarActivos());
+                    System.out.println("Ingrese el ID de la categoria a eliminar: ");
+                    try{
+                        Long idAEliminar=Long.parseLong(sc.nextLine().trim());
+                        if(categoriaRepo.eliminarLogico(idAEliminar)){
+                            System.out.println("Id eliminado exitosamente");
+                        }else {
+                            System.out.println("Id invalido");
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Formaro de id invalido");
+                }
+                    break;
+                case "4":
+                    mostrarCategorias(categoriaRepo.listarActivos());
+                    break;
+                default:
+                    System.out.println("\n Opcion invalida!");
+                    break;
+            }
+        }while(!opcMenuCat.equals("0"));
+    }
 
-                case 3:
-                    int opcionReporte=999;
-                    do{
-                        opcionReporte=menuReportes(scan);
-                        switch (opcionReporte){
-                            case 0:
-                                break;
-                            case 1:
-                                List<Categoria>categoriasReporte=categoriaRepo.listarActivos();
-                                if (categoriasReporte.size() > 0) {
-                                    long eleccionID;
-                                    Boolean categoriaValida=false;
-                                    do{
+    private static void menuProductos() {
+        // TODO: Implementar submenú de Productos.
+        // Opciones: 1-Alta  2-Modificar  3-Baja lógica  4-Listado  0-Volver
+        String opcProductos="asd";
+        do{
+            System.out.println("####### PRODUCTOS #######");
+            System.out.println("1- Alta");
+            System.out.println("2- Modificar");
+            System.out.println("3- Baja");
+            System.out.println("4- listado");
+            System.out.println("\n0- Volver");
 
-                                        System.out.println("Ingrese el ID de la categoria seleccionada de la siguiente lista");
-                                        mostrarCategorias(categoriasReporte);
-                                        eleccionID=scan.nextLong();
+            opcProductos=sc.nextLine();
+            switch(opcProductos){
+                case "0":
+                    break;
+                case "1":
+                    //Si no hay categorias no se pueden cargar items
+                    if(!categoriaRepo.listarActivos().isEmpty()){
+                        mostrarCategorias(categoriaRepo.listarActivos());
+                        System.out.println("Seleccione una categoria de la lista");
+                        Long idCategoriaElegida=Long.parseLong(sc.nextLine().trim());
+                        Optional<Categoria>cat=categoriaRepo.buscarPorId(idCategoriaElegida);
 
-                                        //Se busca si el ID existe
-                                        for(Categoria c :categoriasReporte){
-                                            if(c.getId()==eleccionID){
-                                                categoriaValida=true;
-                                            }
+                        //Solo si la categoria existe
+                        if(!cat.isEmpty()){
+                            String nombreProductoNuevo="";
+                            do{
+                                System.out.println("Ingrese el nombre del producto: ");
+                                nombreProductoNuevo=sc.nextLine();
+                                if(nombreProductoNuevo.isEmpty()){
+                                    System.out.println("Debe ingresar un nombre");
+                                }
+                            }while(nombreProductoNuevo.isEmpty());
+
+                            System.out.println("Ingrese una descripcion:");
+                            String descProductoNuevo=sc.nextLine();
+
+                            Double precio=0.0;
+                            do{
+                                try{
+                                    System.out.println("Ingrese el precio (double)");
+                                    precio=Double.parseDouble(sc.nextLine().trim());
+                                }catch (NumberFormatException e){
+                                    System.out.println("Formato de precio invalido");
+                                }
+                            }while(precio<=0.0);
+
+                            int stock=0;
+                            do{
+                                try{
+                                    System.out.println("Ingrese el stock");
+                                    stock=Integer.parseInt(sc.nextLine().trim());
+                                }catch (NumberFormatException e){
+                                    System.out.println("Formato de numero invalido");
+                                }
+                                if(stock==0){
+                                    System.out.println("El stock debe ser mayor a 0");
+                                }
+                            }while(stock<=0);
+
+                            System.out.println("Ingrese el nombre del archivo de imagen");
+                            String nuevoArchivoImagen=sc.nextLine().trim();
+
+                            Producto nuevoProducto=Producto.builder()
+                                    .nombre(nombreProductoNuevo)
+                                    .precio(precio)
+                                    .descripcion(descProductoNuevo)
+                                    .stock(stock)
+                                    .imagen(nuevoArchivoImagen)
+                                    .disponible(true)
+                                    .eliminado(false)
+                                    .build();
+                            productoRepo.guardar(nuevoProducto);
+
+                            //Se actualiza el set de producto en categorias
+                            List<Producto>productosExistentes=categoriaRepo.buscarProductosPorCategoria(idCategoriaElegida);
+                            Set<Producto>productos=new HashSet<>(productosExistentes);
+                            productos.add(nuevoProducto);
+
+                            Categoria categoria=cat.get();
+                            categoria.setProductos(productos);
+                            categoriaRepo.guardar(categoria);
+
+                            System.out.println("Producto agregado con el id"+nuevoProducto.getId()+" en la categoria "+cat.get().getNombre()+"");
+
+                        }else{
+                            System.out.println("Id categoria invalido");
+                        }
+
+                    }else{
+                        System.out.println("No hay categorias para asignar");
+                    }
+                    break;
+                case "2":
+                    List<Producto>productosActivos=productoRepo.listarActivos();
+                    for(Producto p:productosActivos){
+                        System.out.println("ID: " + p.getId()+ ",NOMBRE: " + p.getNombre()
+                                + ",PRECIO: "+ p.getPrecio() + ",STOCK: " + p.getStock());
+                    }
+                    System.out.println("Ingrese el id del producto a modificar: ");
+                    try{
+                        Long idAModificar=Long.parseLong(sc.nextLine().trim());
+                        Optional<Producto> productoAModificar=productoRepo.buscarPorId(idAModificar);
+                        if(!productoAModificar.isEmpty()){
+                            Producto prodAux=productoAModificar.get();
+
+                            //Si no se encuentra eliminado
+                            if(!prodAux.isEliminado()){
+                                System.out.println("Ingrese el nuevo nombre [ENTER] para mantener ("+prodAux.getNombre()+"");
+                                String nuevoNombre=sc.nextLine();
+                                if(!nuevoNombre.isEmpty()){
+                                    prodAux.setNombre(nuevoNombre);
+                                }
+
+                                boolean precioValido=true;
+                                double nuevoPrecio=0.0; //solo para inicializar
+                                do{
+                                    try{
+                                        System.out.println("Ingrese el nuevo precio (actual:"+prodAux.getPrecio()+")");
+                                        nuevoPrecio=Long.parseLong(sc.nextLine().trim());
+                                        precioValido=true;
+                                        if(nuevoPrecio<0){
+                                            System.out.println("El precio debe ser mayor a  0");
+                                            precioValido=false;
                                         }
-                                        if(categoriaValida==false){
-                                            System.out.println("ID incorrecto, seleccione uno de la lista");
-                                        }
-                                    }while(categoriaValida==false);
-
-                                    List<Producto>listaPorCategoria=productoRepo.buscarPorCategoria(eleccionID);
-                                    if(listaPorCategoria.size()>0){
-                                        mostrarListaProductos(listaPorCategoria);
-                                    }else{
-                                        System.out.println("La categoria aun no cuenta con productos para mostrar");
+                                    }catch(NumberFormatException e){
+                                        System.out.println("Formato de precio invalido");
+                                        precioValido=false;
                                     }
-                                    String nombreNuevoProd=null;
+                                }while(precioValido==false);
+                                prodAux.setPrecio(nuevoPrecio);
 
-                                }else{
-                                    System.out.println("No hay categorias para mostrar");
-                                }
+                                int nuevoStock=0; //Solo para inicialiar
+                                boolean stockValido=true;
+                                do{
+                                    try{
+                                        System.out.println("ingrese el nuevo stock (actual:"+prodAux.getStock()+"): ");
+                                        nuevoStock=Integer.parseInt(sc.nextLine().trim());
+                                        stockValido=true;
+                                    }catch (NumberFormatException e){
+                                        System.out.println("Formato de stock invalido");
+                                    }
+                                    if(nuevoStock<-1){
+                                        System.out.println("Stock debe ser igual-mayor a 0");
+                                        precioValido=true;
+                                    }
+                                }while(stockValido==false);
+                                prodAux.setStock(nuevoStock);
+                                productoRepo.guardar(prodAux);
+                                System.out.println("Producto actualizado!");
 
-                                break;
-                            default:
-                                System.out.println("Opcion invalida!");
+
+                            }else{
+                                System.out.println("El producto se encuentra eliminado");
+                            }
+
+                        }else{
+                            System.out.println("El id no existe");
                         }
-                    }while(opcionReporte!=0);
+
+
+                    }catch (NumberFormatException e){
+                        System.out.println("Formato de ID invalido");
+                    }
+
 
                     break;
+                case "3":
+                    System.out.println("Ingrese el ID del producto a eliminar");
+                    try{
+                        Long idAEliminar=Long.parseLong(sc.nextLine().trim());
+                        Boolean eliminado=productoRepo.eliminarLogico(idAEliminar);
+                        if(eliminado){
+                            System.out.println("Producto Eliminado!");
+                        }else{
+                            System.out.println("Id no encontrado");
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Formato de ID invalido");
+                    }
+                    break;
+                case "4":
+                    mostrarProductosCategorias();
+                    break;
+                default:
+                    System.out.println("Opcion invalida!");
+                    break;
+            }
+        }while(opcProductos.equals("0"));
 
+        //System.out.println("[Productos] → TODO: implementar");
+    }
+
+    private static void menuUsuarios() {
+        // TODO: Implementar submenú de Usuarios.
+        // Opciones: 1-Alta  2-Modificar  3-Baja lógica  4-Listado  5-Buscar por mail  0-Volver
+        String opcUsuarios="";
+        do{
+            System.out.println("####### USUARIOS #######");
+            System.out.println("1-Alta");
+            System.out.println("2-Modificar");
+            System.out.println("3-Baja logica");
+            System.out.println("4-Listado");
+            System.out.println("5- Buscar por mail");
+            System.out.println("\n0-volver");
+
+            opcUsuarios=sc.nextLine().trim();
+            switch(opcUsuarios){
+                case "0":
+                    break;
+                case "1":
+                    String nombreUsuario="";
+                    do{
+                        System.out.println("Ingrese el nombre: ");
+                        nombreUsuario=sc.nextLine().trim();
+                    }while(nombreUsuario.isEmpty());
+
+                    String apellidoUsuario="";
+                    do{
+                        System.out.println("Ingrese el apellido: ");
+                        apellidoUsuario=sc.nextLine().trim();
+                    }while(apellidoUsuario.isEmpty());
+
+                    String mailUsuario="";
+                    do{
+                        System.out.println("ingrese el mail: ");
+                        mailUsuario=sc.nextLine().trim();
+                    }while(mailUsuario.isEmpty());
+
+                    if(usuarioRepo.buscarPorMail(mailUsuario).isEmpty()){
+
+                        //Los telefonos pueden empezar por 0
+                        String celularUsuario="";
+                        do{
+                            System.out.println("Ingrese el numero de telefono");
+                           celularUsuario=sc.nextLine().trim();
+                        }while (celularUsuario.isEmpty());
+
+                        String contrasenaUsuario="";
+                        do{
+                            System.out.println("Ingrese su contraseña");
+                            contrasenaUsuario=sc.nextLine().trim();
+                        }while(contrasenaUsuario.isEmpty());
+
+                        String rol="3";
+                        do{
+                            System.out.println("Ingrese un rol:");
+                            System.out.println("1- Admin");
+                            System.out.println("2- Usuario");
+                            rol=sc.nextLine().trim();
+                            if(!rol.equals("1") && !rol.equals("2")){
+                                System.out.println("Rol invalido");
+                            }
+                        }while(!rol.equals("1") && !rol.equals("2"));
+
+                        Rol nuevoRol=(rol.equals("1"))? Rol.ADMIN : Rol.USUARIO;
+
+                        Usuario nuevoUsuario=Usuario.builder()
+                                .nombre(nombreUsuario)
+                                .apellido(apellidoUsuario)
+                                .mail(mailUsuario)
+                                .celular(celularUsuario)
+                                .contraseña(contrasenaUsuario)
+                                .rol(nuevoRol)
+                                .build();
+                        usuarioRepo.guardar(nuevoUsuario);
+
+                        System.out.println("Se creo un nuevo usuario con el ID: "+nuevoUsuario.getId());
+
+                    }else{
+                        System.out.println("El mail ya esta en uso, elija otro");
+                    }
+                    break;
+                case "2":
+                    mostrarUsuarios(usuarioRepo.listarActivos());
+                    Long idAModificar= 0L;
+                    boolean idValido=false;
+                    do{
+                        try{
+                            System.out.println("Ingrese el ID a modificar");
+                            idAModificar=Long.parseLong(sc.nextLine().trim());
+                            idValido=true;
+                        }catch (NumberFormatException e){
+                            System.out.println("Formato de ID invalido");
+                            idValido=false;
+                        }
+                    }while(idValido==false);
+
+                    Optional<Usuario>usuarioBuscado=usuarioRepo.buscarPorId(idAModificar);
+                    if(usuarioBuscado.isEmpty()){
+                        System.out.println("El usuario no existe");
+
+                    }else if(usuarioBuscado.get().isEliminado()){
+                        System.out.println("El usuario se encuentra dado de baja");
+                    }else{
+                        Usuario usuarioAEditar=usuarioBuscado.get();
+                        System.out.println("Ingrese un nuevo nombre (actual:"+usuarioAEditar.getNombre()+"");
+                        String nombreTemp=sc.nextLine().trim();
+                        if(!nombreTemp.isEmpty()){
+                            usuarioAEditar.setNombre(nombreTemp);
+                        }
+
+                        System.out.println("Ingrese un nuevo apellido (actual:"+usuarioAEditar.getApellido()+")");
+                        String apellidoTemp=sc.nextLine().trim();
+                        if(!apellidoTemp.isEmpty()){
+                            usuarioAEditar.setApellido(apellidoTemp);
+                        }
+                        System.out.println("Ingrese una nueva contraseña (actual:"+usuarioAEditar.getContraseña()+")");
+                        String contrasenaTemp=sc.nextLine().trim();
+                        if(!contrasenaTemp.isEmpty()){
+                            usuarioAEditar.setContraseña(contrasenaTemp);
+                        }
+                        System.out.println("Ingrese un nuevo numero celular (actual:"+usuarioAEditar.getCelular()+")");
+                        String celularTemp=sc.nextLine().trim();
+                        if(!celularTemp.isEmpty()){
+                            usuarioAEditar.setCelular(celularTemp);
+                        }
+
+                        Optional<Usuario>usuarioExiste=null;
+                        //String mailTemp="";
+                        boolean mailListo = false;
+                        do {
+                            System.out.println("Ingrese el nuevo email (actual: " + usuarioAEditar.getMail() + "):");
+                            String mailTemp = sc.nextLine().trim();
+                            if (mailTemp.isEmpty() || mailTemp.equals(usuarioAEditar.getMail())) {
+                                mailListo = true;
+                            } else if (usuarioRepo.buscarPorMail(mailTemp).isPresent()) {
+                                System.out.println("El mail ya está en uso, elija otro");
+                            } else {
+                                usuarioAEditar.setMail(mailTemp);
+                                mailListo = true;
+                            }
+                        } while (!mailListo);
+
+                        usuarioRepo.guardar(usuarioAEditar);
+                        System.out.println("Se actualizo el usuario");
+                    }
+                    break;
+                case "3":
+                    mostrarUsuarios(usuarioRepo.listarActivos());
+                    System.out.println("Ingrese el id de usuario a eliminar (logica): ");
+                    try{
+                        
+                    }catch (NumberFormatException e){
+                        System.out.println("Formato de Id invalido");
+                    }
+                    Long idAEliminar=Long.parseLong(sc.nextLine().trim());
+                    break;
+                case "4":
+                    mostrarUsuarios(usuarioRepo.listarActivos());
+                    break;
                 default:
                     System.out.println("Opcion invalida");
                     break;
-
             }
-        }while(opcion!=0);
-
-        //se cierra el EMF unicamente al final
-        JPAUtil.getEntityManagerFactory().close();
-    }
-    public static int menuPrincipal(Scanner scan){
-        int opcion=0;
-        System.out.println("######## Menu Principal ########");
-        System.out.println("1- Categorias");
-        System.out.println("2- Productos");
-        System.out.println("3- Reportes");
-        System.out.println("\n\n0- SALIR");
-        opcion=scan.nextInt();
-        return opcion;
+        }while(!opcUsuarios.equals("0"));
+        System.out.println("[Usuarios] → TODO: implementar");
     }
 
-    public static int menuABMCategorias(Scanner scan){
-        int opcion =0;
-        System.out.println("******** CATEGORIAS ********");
-        System.out.println("1- Agregar nueva categoria");
-        System.out.println("2- Dar de baja una categoria");
-        System.out.println("3- Modificar una categoria");
-        System.out.println("4- Listar categorias");
-        System.out.println("\n\n0- VOLVER");
-        opcion=scan.nextInt();
-        return opcion;
+    private static void menuPedidos() {
+        // TODO: Implementar submenú de Pedidos.
+        // Opciones: 1-Alta  2-Cambiar estado  3-Baja lógica  4-Listado
+        //           5-Por usuario  6-Por estado  0-Volvero
+        System.out.println("[Pedidos] → TODO: implementar");
     }
 
-    public static int menuABMproducto(Scanner scan){
-        int opcion=0;
-        System.out.println("$$$$$$$$ PRODUCTOS $$$$$$$$");
-        System.out.println("1- Crear producto");
-        System.out.println("2- Borrar producto (logica)");
-        System.out.println("3- Modificar producto");
-        System.out.println("4- Listar productos activos");
-        System.out.println("\n\n0- VOLVER");
-        opcion=scan.nextInt();
-        return opcion;
+    private static void menuReportes() {
+        // TODO: Implementar submenú de Reportes.
+        // Opciones: 1-Productos por categoría  2-Pedidos por usuario
+        //           3-Pedidos por estado  4-Total facturado  0-Volver
+        System.out.println("[Reportes] → TODO: implementar");
     }
 
-    public static int menuReportes(Scanner scan){
-        int opcion=0;
-        System.out.println("\n\nXXXXXXXX Reportes XXXXXXXX");
-        System.out.println("1- Informe de productos por categoria");
-        System.out.println("\n\n0- VOLVER ");
-        opcion=scan.nextInt();
-        return opcion;
-    }
+    //METODOS AUXILIARES ADICIONALES
 
-    public static void mostrarCategorias(List<Categoria>categorias){
-        for(Categoria c: categorias){
-            System.out.println("ID:"+c.getId()+", NOMBRE: "+c.getNombre()+", DESCRIPCION:"+c.getDescripcion());
+    private static void mostrarCategorias(List<Categoria>cat){
+        if(!cat.isEmpty()){
+            for(Categoria c: cat){
+                System.out.println("iD: "+c.getId()+",Nombre: "+c.getNombre()+",Descripcion: "+c.getDescripcion());
+            }
+        }
+    }
+    private static void mostrarProductosCategorias() {
+        //se recorren todas las categorias y se arma un hash nuevo
+        Map<Long, String> categoriaDeProducto = new HashMap<>();
+        for (Categoria cat : categoriaRepo.listarActivos()) {
+            for (Producto p : categoriaRepo.buscarProductosPorCategoria(cat.getId())) {
+                categoriaDeProducto.put(p.getId(), cat.getNombre());
+            }
+        }
+
+        // lista productos
+        List<Producto> productos = productoRepo.listarActivos();
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos cargados.");
+            return;
+        }
+        for (Producto p : productos) {
+            String nombreCat = categoriaDeProducto.getOrDefault(p.getId(), "(sin categoría)");
+            System.out.println(
+                    "ID: " + p.getId()+ ",NOMBRE: " + p.getNombre()
+                            + ",PRECIO: "+ p.getPrecio() + ",STOCK: " + p.getStock()
+                            + ",DISPONIBLE: " + (p.getDisponible() ? "SI" : "NO")
+                            + ",CATEGORIA: " + nombreCat);
         }
     }
 
-    public static void mostrarListaProductos(List<Producto> productos){
-        System.out.println("\n");
-        for(Producto p: productos){
-            System.out.println("ID:"+p.getId()+" " +
-                    ",NOMBRE: "+p.getNombre()+
-                    ",PRECIO: "+p.getPrecio()+
-                    ",STOCK:"+p.getStock()+
-                    ",CATEGORIA: "+p.getCategoria().getNombre());
+    private static void mostrarUsuarios(List<Usuario>usuarios){
+        if(!usuarios.isEmpty()){
+            for(Usuario u: usuarios){
+                System.out.println("ID: "+u.getId()+",APELLIDO:"+u.getApellido()+",NOMBRE: "+u.getNombre()+",MAIL: "+u.getMail()+",ROL:"+u.getRol().toString());
+            }
         }
-        System.out.println("\n");
     }
 }
