@@ -506,12 +506,18 @@ public class Main {
                 case "3":
                     mostrarUsuarios(usuarioRepo.listarActivos());
                     System.out.println("Ingrese el id de usuario a eliminar (logica): ");
+                    Long idAEliminar=0l;
                     try{
-                        
+                        idAEliminar=Long.parseLong(sc.nextLine().trim());
                     }catch (NumberFormatException e){
                         System.out.println("Formato de Id invalido");
                     }
-                    Long idAEliminar=Long.parseLong(sc.nextLine().trim());
+
+                    if(usuarioRepo.eliminarLogico(idAEliminar)==true){
+                        System.out.println("El usuario ha sido dado de baja");
+                    }else{
+                        System.out.println("Usuario no encontdao");
+                    }
                     break;
                 case "4":
                     mostrarUsuarios(usuarioRepo.listarActivos());
