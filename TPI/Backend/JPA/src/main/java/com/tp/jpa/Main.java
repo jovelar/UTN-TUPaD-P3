@@ -220,10 +220,10 @@ public class Main {
                                 }catch (NumberFormatException e){
                                     System.out.println("Formato de numero invalido");
                                 }
-                                if(stock==0){
-                                    System.out.println("El stock debe ser mayor a 0");
+                                if(stock<0){
+                                    System.out.println("El stock debe ser 0 o mayor");
                                 }
-                            }while(stock<=0);
+                            }while(stock<0);
 
                             System.out.println("Ingrese el nombre del archivo de imagen");
                             String nuevoArchivoImagen=sc.nextLine().trim();
@@ -258,6 +258,7 @@ public class Main {
                         System.out.println("No hay categorias para asignar");
                     }
                     break;
+
                 case "2":
                     List<Producto>productosActivos=productoRepo.listarActivos();
                     for(Producto p:productosActivos){
@@ -284,9 +285,9 @@ public class Main {
                                 do{
                                     try{
                                         System.out.println("Ingrese el nuevo precio (actual:"+prodAux.getPrecio()+")");
-                                        nuevoPrecio=Long.parseLong(sc.nextLine().trim());
+                                        nuevoPrecio=Double.parseDouble(sc.nextLine().trim());
                                         precioValido=true;
-                                        if(nuevoPrecio<0){
+                                        if(nuevoPrecio<=0){
                                             System.out.println("El precio debe ser mayor a  0");
                                             precioValido=false;
                                         }
@@ -307,9 +308,9 @@ public class Main {
                                     }catch (NumberFormatException e){
                                         System.out.println("Formato de stock invalido");
                                     }
-                                    if(nuevoStock<-1){
+                                    if(nuevoStock<0){
                                         System.out.println("Stock debe ser igual-mayor a 0");
-                                        precioValido=true;
+                                        stockValido=false;
                                     }
                                 }while(stockValido==false);
                                 prodAux.setStock(nuevoStock);
@@ -353,7 +354,7 @@ public class Main {
                     System.out.println("Opcion invalida!");
                     break;
             }
-        }while(opcProductos.equals("0"));
+        }while(!opcProductos.equals("0"));
 
         //System.out.println("[Productos] → TODO: implementar");
     }
@@ -522,6 +523,15 @@ public class Main {
                 case "4":
                     mostrarUsuarios(usuarioRepo.listarActivos());
                     break;
+                case "5":
+                    System.out.println("Ingrese el mail del usuario a buscar: ");
+                    String mailBuscado=sc.nextLine().trim();
+                    if(!mailBuscado.isEmpty()){
+
+                    }else{
+                        System.out.println("");
+                    }
+                    break;
                 default:
                     System.out.println("Opcion invalida");
                     break;
@@ -552,12 +562,43 @@ public class Main {
                     List<Usuario>usuariosActivos=usuarioRepo.listarActivos();
                     if(usuariosActivos.size()>0) {
 
+                        System.out.println("Ingrese el ID del cliente:");
+                        Long idUsuario;
+                        try{
+                            idUsuario=Long.parseLong(sc.nextLine().trim());
+
+                        }catch (NumberFormatException e){
+                            System.out.println("Formato de usuario invalido");
+                            break;
+                        }
+                        Optional<Usuario>validaUsuario=usuarioRepo.buscarPorId(idUsuario);
+                        if(validaUsuario.isPresent()){
+
+                            int tipoPago=4;
+                            FormaPago pago;
+                            do{
+                                System.out.println("Seleccione una forma de pago: ");
+                                System.out.println("1-Tarjeta \n2-Transferencia \n3-Efectivo");
+                                tipoPago=Integer.parseInt(sc.nextLine().trim());
+                                if(tipoPago==1){
+                                    pago=FormaPago.TARJETA;
+                                }
+                                if(tipoPago==2){
+                                    pago=FormaPago.TRANSFERENCIA;
+                                }
+                                if(tipoPago==3){
+                                    pago=FormaPago.EFECTIVO;
+                                }
+                            }while(tipoPago>0 && tipoPago<4);
 
 
 
+                        }else{
+                            System.out.println("El usuario no existe");
+                        }
 
                     }else{
-                        System.out.println("No hayt usuarios dispomibles");
+                        System.out.println("No hay usuarios dispomibles");
                     }
                     break;
                 case "1":
@@ -590,6 +631,10 @@ public class Main {
 
     //METODOS AUXILIARES ADICIONALES
 
+    /**
+     * Muestra categorias
+     * @param cat
+     */
     private static void mostrarCategorias(List<Categoria>cat){
         if(!cat.isEmpty()){
             for(Categoria c: cat){
@@ -597,6 +642,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Arma un map entre categorias y productos, para luego podes mostrarlos asociados
+     */
     private static void mostrarProductosCategorias() {
         //se recorren todas las categorias y se arma un hash nuevo
         Map<Long, String> categoriaDeProducto = new HashMap<>();
@@ -622,6 +671,10 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra todos los usuarios del sistema
+     * @param usuarios
+     */
     private static void mostrarUsuarios(List<Usuario>usuarios){
         if(!usuarios.isEmpty()){
             for(Usuario u: usuarios){
@@ -629,4 +682,19 @@ public class Main {
             }
         }
     }
+
+    /**
+     * Muestra solo los clientes del sistema, no admins.
+     * @param usuarios
+     */
+    private static void mostrarClientes(List<Usuario>usuarios){
+        if(!usuarios.isEmpty()){
+            for(Usuario u: usuarios){
+                if(u.getRol()==Rol.USUARIO){
+                    System.out.println("ID: "+u.getId()+",APELLIDO:"+u.getApellido()+",NOMBRE: "+u.getNombre()+",MAIL: "+u.getMail()+"");
+                }
+            }
+        }
+    }
+
 }
