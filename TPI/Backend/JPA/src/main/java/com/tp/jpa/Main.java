@@ -534,7 +534,51 @@ public class Main {
         // TODO: Implementar submenú de Pedidos.
         // Opciones: 1-Alta  2-Cambiar estado  3-Baja lógica  4-Listado
         //           5-Por usuario  6-Por estado  0-Volvero
-        System.out.println("[Pedidos] → TODO: implementar");
+        String opcMenuPedidos="0";
+        do{
+            System.out.println("####### PEDIDOS #######");
+            System.out.println("1-Alta");
+            System.out.println("2-Cambiar");
+            System.out.println("3-Baja logica");
+            System.out.println("4-Listado");
+            System.out.println("5-por Usuario");
+            System.out.println("6-Por estado");
+            System.out.println("\n0-Volver");
+
+            opcMenuPedidos=sc.nextLine().trim();
+
+            switch(opcMenuPedidos){
+                case "0":
+                    List<Usuario>usuariosActivos=usuarioRepo.listarActivos();
+                    if(usuariosActivos.size()>0) {
+
+
+
+
+
+                    }else{
+                        System.out.println("No hayt usuarios dispomibles");
+                    }
+                    break;
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "5":
+                    break;
+                case "6":
+                    break;
+                default:
+                    System.out.println("Opcion invalida");
+                    break;
+            }
+
+        }while(!opcMenuPedidos.equals("0"));
+        //System.out.println("[Pedidos] → TODO: implementar");
     }
 
     private static void menuReportes() {
