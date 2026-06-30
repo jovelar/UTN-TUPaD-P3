@@ -15,6 +15,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -146,7 +147,10 @@ public class Main {
                     try{
                         Long idAEliminar=Long.parseLong(sc.nextLine().trim());
                         if(categoriaRepo.eliminarLogico(idAEliminar)){
-                            System.out.println("Id eliminado exitosamente");
+
+                            //Se llama directamente sin usar Optional por que se sabe que existe
+                            Categoria cAux=categoriaRepo.buscarPorId(idAEliminar).get();
+                            System.out.println("Catagoria \""+cAux.getNombre()+"\" eliminado exitosamente");
                         }else {
                             System.out.println("Id invalido");
                         }
@@ -527,9 +531,17 @@ public class Main {
                     System.out.println("Ingrese el mail del usuario a buscar: ");
                     String mailBuscado=sc.nextLine().trim();
                     if(!mailBuscado.isEmpty()){
-
+                        Optional<Usuario> usuarioBuscaMail=usuarioRepo.buscarPorMail(mailBuscado);
+                        if(usuarioBuscaMail.isPresent()){
+                            Usuario aux=usuarioBuscaMail.get();
+                            System.out.println("\nDatos del usuario:");
+                            System.out.println("ID:"+aux.getId()+",APELLIDO: "+aux.getApellido()+",NOMBRE: "+aux.getNombre()
+                            +",CELULAR: "+aux.getCelular()+",MAIL: "+aux.getMail());
+                        }else{
+                            System.out.println("Usuario con el mail ingresado no existe");
+                        }
                     }else{
-                        System.out.println("");
+                        System.out.println("Debe ingresar un mail");
                     }
                     break;
                 default:
@@ -559,9 +571,11 @@ public class Main {
 
             switch(opcMenuPedidos){
                 case "0":
+                    break;
+                case "1":
                     List<Usuario>usuariosActivos=usuarioRepo.listarActivos();
                     if(usuariosActivos.size()>0) {
-
+                        mostrarUsuarios(usuariosActivos);
                         System.out.println("Ingrese el ID del cliente:");
                         Long idUsuario;
                         try{
@@ -574,24 +588,123 @@ public class Main {
                         Optional<Usuario>validaUsuario=usuarioRepo.buscarPorId(idUsuario);
                         if(validaUsuario.isPresent()){
 
+                            //Seleccion de forma de pago
                             int tipoPago=4;
-                            FormaPago pago;
+                            FormaPago pago=null;
                             do{
-                                System.out.println("Seleccione una forma de pago: ");
-                                System.out.println("1-Tarjeta \n2-Transferencia \n3-Efectivo");
-                                tipoPago=Integer.parseInt(sc.nextLine().trim());
-                                if(tipoPago==1){
-                                    pago=FormaPago.TARJETA;
-                                }
-                                if(tipoPago==2){
-                                    pago=FormaPago.TRANSFERENCIA;
-                                }
-                                if(tipoPago==3){
-                                    pago=FormaPago.EFECTIVO;
-                                }
-                            }while(tipoPago>0 && tipoPago<4);
+                                try{
+                                    System.out.println("Seleccione una forma de pago: ");
+                                    System.out.println("1-Tarjeta \n2-Transferencia \n3-Efectivo");
+                                    tipoPago=Integer.parseInt(sc.nextLine().trim());
+                                    if(tipoPago==1){
+                                        pago=FormaPago.TARJETA;
+                                    }
+                                    if(tipoPago==2){
+                                        pago=FormaPago.TRANSFERENCIA;
+                                    }
+                                    if(tipoPago==3){
+                                        pago=FormaPago.EFECTIVO;
+                                    }
 
+                                }catch (NumberFormatException e){
+                                    System.out.println("\nFormato de opcion invalida\n");
+                                }
+                            }while(tipoPago<1 || tipoPago >3);
 
+                            //Lista donse se van a guardar los pedidos
+                            Map<Long,Integer>listaTemporal=new HashMap<>();
+
+                            //Seleccion de productos, finaliza al ingresar "S"
+                            String inputpedido="";
+                            do {
+
+                                mostrarProductosDisponibles(productoRepo.listarActivos());
+                                System.out.println("Ingrese el ID del producto que elige:");
+                                String inputId = sc.nextLine().trim();
+                                try {
+                                    Long idProducto = Long.parseLong(inputId);
+                                    //validar que existe, que disponible=true, pedir cantidad, agregar a lista temporal ...
+                                    Optional<Producto>prodOptional=productoRepo.buscarPorId(idProducto);
+                                    if(prodOptional.isPresent()){
+                                        int stockDeseado=0;
+
+                                        int existencias=0;
+                                        do{
+                                            existencias=prodOptional.get().getStock();
+                                            System.out.println("Ingrese cuantos items desea: (existencias: "+existencias+")");
+                                            try{
+                                                stockDeseado= Integer.parseInt(sc.nextLine().trim());
+                                            }catch (NumberFormatException e){
+                                                System.out.println("Formato de numero invalido");
+                                            }
+                                        }while(stockDeseado<0 || stockDeseado>=existencias);
+
+                                        listaTemporal.put(idProducto,stockDeseado);
+                                        System.out.println("Producto agregado!");
+
+                                    }else{
+                                        System.out.println("No existe producto con ese ID");
+                                    }
+                                } catch (NumberFormatException e) {
+                                    System.out.println("ID inválido.");
+                                }
+                                System.out.println("¿Desea agregar otro producto? (S/N):");
+                                inputpedido= sc.nextLine().trim().toUpperCase();
+                            } while (inputpedido.equals("S"));
+
+                            if(listaTemporal.size()!=0){
+                                EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+                                EntityTransaction tx = em.getTransaction();
+                                try {
+                                    tx.begin();
+
+                                    Usuario usuario = em.find(Usuario.class, idUsuario);
+
+                                    Pedido pedido = Pedido.builder()
+                                            .fecha(LocalDate.now())
+                                            .estado(Estado.PENDIENTE)
+                                            .formaPago(pago)
+                                            .build();
+
+                                    
+                                    for (Map.Entry<Long, Integer> valor : listaTemporal.entrySet()) {
+                                        Producto producto = em.find(Producto.class, valor.getKey());
+                                        pedido.addDetallePedido(valor.getValue(), producto);
+
+                                        //se descuenta del stock.
+                                        producto.setStock(producto.getStock() - valor.getValue());
+                                    }
+
+                                    pedido.calcularTotal();
+                                    em.persist(pedido);
+
+                                    //se fuerza para que la bd asigne un id al pedodp
+                                    em.flush();
+                                    usuario.getPedidos().add(pedido);
+                                    tx.commit();
+
+                                    System.out.println("Pedido creado! ID: " + pedido.getId());
+                                    System.out.println("Fecha: " + pedido.getFecha());
+                                    System.out.println("Usuario: " + usuario.getNombre() + " " + usuario.getApellido());
+                                    System.out.println("Forma de pago: " + pedido.getFormaPago());
+
+                                    //Bucler para listar todos los pedidos
+                                    for (DetallePedido d : pedido.getDetalles()) {
+                                        System.out.println("  - " + d.getProducto().getNombre()
+                                                + " x" + d.getCantidad()
+                                                + "  subtotal: $" + d.getSubtotal());
+                                    }
+                                    System.out.println("Total: $" + pedido.getTotal());
+
+                                } catch (Exception e) {
+                                    if (tx.isActive()) tx.rollback();
+                                    System.out.println("Error al crear el pedido, se cancelo el pedido.");
+                                } finally {
+                                    em.close();
+                                }
+                            }else{
+                                System.out.println("La lista esta vacia!, el pedido debe tener al menos 1 unidad de un producto.");
+                            }
 
                         }else{
                             System.out.println("El usuario no existe");
@@ -601,13 +714,47 @@ public class Main {
                         System.out.println("No hay usuarios dispomibles");
                     }
                     break;
-                case "1":
-                    break;
                 case "2":
+                    mostrarPedidos(usuarioRepo.listarActivos());
+                    System.out.println("Ingrese el ID del pedido a modificar:");
+                    try {
+                        Long idPedido = Long.parseLong(sc.nextLine().trim());
+                        Optional<Pedido> pedidoOpt = pedidoRepo.buscarPorId(idPedido);
+                        if (pedidoOpt.isPresent() && !pedidoOpt.get().isEliminado()) {
+                            Pedido pedidoAModificar = pedidoOpt.get();
+                            System.out.println("Estado actual: " + pedidoAModificar.getEstado());
+
+                            int opEstado = 0;
+                            Estado nuevoEstado = null;
+                            do {
+                                try {
+                                    System.out.println("Seleccione el nuevo estado:");
+                                    System.out.println("1-PENDIENTE\n2-CONFIRMADO\n3-TERMINADO\n4-CANCELADO");
+                                    opEstado = Integer.parseInt(sc.nextLine().trim());
+                                    if (opEstado == 1) nuevoEstado = Estado.PENDIENTE;
+                                    if (opEstado == 2) nuevoEstado = Estado.CONFIRMADO;
+                                    if (opEstado == 3) nuevoEstado = Estado.TERMINADO;
+                                    if (opEstado == 4) nuevoEstado = Estado.CANCELADO;
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Formato invalido.");
+                                }
+                            } while (opEstado < 1 || opEstado > 4);
+
+                            pedidoAModificar.setEstado(nuevoEstado);
+                            pedidoRepo.guardar(pedidoAModificar);
+                            System.out.println("Pedido ID: " + pedidoAModificar.getId() + " actualizado a: " + nuevoEstado);
+
+                        } else {
+                            System.out.println("El pedido no existe o esta dado de baja.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Formato de ID invalido.");
+                    }
                     break;
                 case "3":
                     break;
                 case "4":
+                    mostrarPedidos(usuarioRepo.listarActivos());
                     break;
                 case "5":
                     break;
@@ -640,6 +787,43 @@ public class Main {
             for(Categoria c: cat){
                 System.out.println("iD: "+c.getId()+",Nombre: "+c.getNombre()+",Descripcion: "+c.getDescripcion());
             }
+        }
+    }
+
+    /**
+     * Muestra productos activos
+     * @param productos
+     */
+    private static void mostrarProductos(List<Producto> productos) {
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos cargados.");
+            return;
+        }
+        for (Producto p : productos) {
+            System.out.println(
+                    "ID: " + p.getId() + ",NOMBRE: " + p.getNombre()
+                            + ",PRECIO: " + p.getPrecio() + ",STOCK: " + p.getStock()
+                            + ",DISPONIBLE: " + (p.getDisponible() ? "SI" : "NO"));
+        }
+    }
+
+    /**
+     * Muestra productos activos y disponibles para la venta
+     * @param productos
+     */
+    private static void mostrarProductosDisponibles(List<Producto> productos) {
+        List<Producto> disponibles = productos.stream()
+                .filter(p -> p.getDisponible())
+                .toList();
+
+        if (disponibles.isEmpty()) {
+            System.out.println("No hay productos disponibles.");
+            return;
+        }
+        for (Producto p : disponibles) {
+            System.out.println(
+                    "ID: " + p.getId() + ",NOMBRE: " + p.getNombre()
+                            + ",PRECIO: " + p.getPrecio() + ",STOCK: " + p.getStock());
         }
     }
 
@@ -697,4 +881,23 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra resumen de pedidos
+     * @param usuarios
+     */
+    private static void mostrarPedidos(List<Usuario> usuarios) {
+        for (Usuario u : usuarios) {
+            List<Pedido> pedidos = usuarioRepo.buscarPedidosPorUsuario(u.getId());
+            for (Pedido p : pedidos) {
+                System.out.println("ID: " + p.getId()
+                        + ", FECHA: " + p.getFecha()
+                        + ", ESTADO: " + p.getEstado()
+                        + ", FORMA DE PAGO: " + p.getFormaPago()
+                        + ", USUARIO: " + u.getNombre() + " " + u.getApellido()
+                        + ", TOTAL: $" + p.getTotal());
+            }
+        }
+    }
+
 }
+
