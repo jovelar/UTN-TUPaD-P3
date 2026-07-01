@@ -625,7 +625,9 @@ public class Main {
                                     Long idProducto = Long.parseLong(inputId);
                                     //validar que existe, que disponible=true, pedir cantidad, agregar a lista temporal ...
                                     Optional<Producto>prodOptional=productoRepo.buscarPorId(idProducto);
-                                    if(prodOptional.isPresent()){
+
+                                    //Se valida que exista, que no este eliminado y que este disponible
+                                    if (prodOptional.isPresent() && !prodOptional.get().isEliminado() && prodOptional.get().getDisponible()) {
                                         int stockDeseado=0;
 
                                         int existencias=0;
@@ -637,13 +639,13 @@ public class Main {
                                             }catch (NumberFormatException e){
                                                 System.out.println("Formato de numero invalido");
                                             }
-                                        }while(stockDeseado<0 || stockDeseado>=existencias);
+                                        }while(stockDeseado<=0 || stockDeseado>existencias);
 
                                         listaTemporal.put(idProducto,stockDeseado);
                                         System.out.println("Producto agregado!");
 
                                     }else{
-                                        System.out.println("No existe producto con ese ID");
+                                        System.out.println("No existe producto con ese ID, dado de baja o no disponible");
                                     }
                                 } catch (NumberFormatException e) {
                                     System.out.println("ID inválido.");
@@ -752,13 +754,96 @@ public class Main {
                     }
                     break;
                 case "3":
+                    mostrarPedidos(usuarioRepo.listarActivos());
+                    Long idAEliminar;
+                    try{
+                        System.out.println("Ingrese el ID del pedido que desea borrar: ");
+                        idAEliminar=Long.parseLong(sc.nextLine().trim());
+                        Optional<Pedido>pedidoAEliminar=pedidoRepo.buscarPorId(idAEliminar);
+                        if(pedidoAEliminar.isPresent() && !pedidoAEliminar.get().isEliminado()){
+                            boolean resultado=pedidoRepo.eliminarLogico(idAEliminar);
+                            if(resultado){
+                                System.out.println("Eliminado el pedido "+pedidoAEliminar.get().getId()+", con un total de "+pedidoAEliminar.get().getTotal());
+                            }else{
+                                System.out.println("Hubo un error al eliminar el pedido");
+                            }
+                        }else{
+                            System.out.println("El id asociado a un producto no existe o ya se encuentra dado de baja");
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Formato de ID invalido");
+                    }
                     break;
                 case "4":
                     mostrarPedidos(usuarioRepo.listarActivos());
                     break;
+
                 case "5":
+                    mostrarUsuarios(usuarioRepo.listarActivos());
+                    Long clienteABuscar;
+                    try {
+                        System.out.println("Ingrese el ID del usuario: ");
+                        clienteABuscar = Long.parseLong(sc.nextLine().trim());
+                        Optional<Usuario> usuarioDatos = usuarioRepo.buscarPorId(clienteABuscar);
+
+                        //Si el usuario existe y no fue dado de baja antes
+                        if (usuarioDatos.isPresent() && !usuarioDatos.get().isEliminado()) {
+                            List<Pedido> pedidosUsuario = usuarioRepo.buscarPedidosPorUsuario(clienteABuscar);
+                            if (pedidosUsuario.isEmpty()) {
+                                System.out.println("El usuario no tiene pedidos activos.");
+                            } else {
+                                mostrarPedidosUsuario(pedidosUsuario);
+                                System.out.println("\n\n\n");
+                            }
+                        } else {
+                            System.out.println("No existe un usuario activo con el ID ingresado");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Formato de ID invalido");
+                    }
                     break;
                 case "6":
+                    int opcionEstado;
+                    Estado estado=null;
+                    try{
+                        System.out.println("Ingrese un numero asociado a un estado para continuar: ");
+                        System.out.println("1- PENDIENTE");
+                        System.out.println("2- CANCELADO");
+                        System.out.println("3- TERMINADO");
+                        System.out.println("4- CONFIRMADO");
+                        System.out.println("\n0- SALIR");
+                        opcionEstado=Integer.parseInt(sc.nextLine().trim());
+                        switch(opcionEstado){
+                            case 0:
+                                break;
+                            case 1:
+                                estado=Estado.PENDIENTE;
+                                break;
+                            case 2:
+                                estado=Estado.CANCELADO;
+                                break;
+                            case 3:
+                                estado=Estado.TERMINADO;
+                                break;
+                            case 4:
+                                estado=Estado.CONFIRMADO;
+                                break;
+                            default:
+                                System.out.println("Opcion invalida");
+                                break;
+                        }
+                        if(estado!=null){
+                            List<Pedido>pedidos=pedidoRepo.buscarPorEstado(estado);
+                            if(!pedidos.isEmpty()){
+                                mostrarPedidosUsuario(pedidos);
+                            }else{
+                                System.out.println("\nNo hay pedidos con el estado seleccionado\n");
+                            }
+                        }
+
+                    }catch (NumberFormatException e){
+                        System.out.println("Formato de opcion invalida");
+                    }
                     break;
                 default:
                     System.out.println("Opcion invalida");
@@ -894,6 +979,17 @@ public class Main {
                         + ", ESTADO: " + p.getEstado()
                         + ", FORMA DE PAGO: " + p.getFormaPago()
                         + ", USUARIO: " + u.getNombre() + " " + u.getApellido()
+                        + ", TOTAL: $" + p.getTotal());
+            }
+        }
+    }
+    private static void mostrarPedidosUsuario(List<Pedido>lista){
+        if(!lista.isEmpty()){
+            for (Pedido p : lista) {
+                System.out.println("ID: " + p.getId()
+                        + ", FECHA: " + p.getFecha()
+                        + ", ESTADO: " + p.getEstado()
+                        + ", FORMA DE PAGO: " + p.getFormaPago()
                         + ", TOTAL: $" + p.getTotal());
             }
         }
