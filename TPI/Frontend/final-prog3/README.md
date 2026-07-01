@@ -44,6 +44,19 @@ La aplicación estará disponible en la URL que aparezca en la terminal (general
 
 ---
 
+## 🔑 Credenciales de prueba
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| ADMIN | admin@admin.com | 123456 |
+| USUARIO | cliente@food.com | cliente123 |
+
+## 🚚 Envío
+
+El costo de envío es un valor fijo definido en el frontend (`ENVIO = 500` en `src/pages/store/cart/cart.ts`), ya que en esta iteración no hay backend que lo calcule.
+
+---
+
 
 ## 📁 Estructura del Proyecto
 

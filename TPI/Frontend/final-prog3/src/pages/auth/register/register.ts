@@ -54,14 +54,14 @@ form?.addEventListener("submit", async (e: Event) => {
     }
 
     // Validación básica de email
-    if (!mail.includes("@")) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
         mostrarError("Ingresá un email válido.");
         return;
     }
 
     // Validación de contraseña mínima
-    if (password.length < 4) {
-        mostrarError("La contraseña debe tener al menos 4 caracteres.");
+    if (password.length < 6) {
+        mostrarError("La contraseña debe tener al menos 6 caracteres.");
         return;
     }
 

@@ -80,6 +80,15 @@ function renderizarPedidos() {
 
     listaPedidos.innerHTML = lista.map(pedido => {
         const cantProductos = pedido.detalles.reduce((sum, d) => sum + d.cantidad, 0);
+
+        // Resumen con los primeros 3 productos del pedido
+        const nombresPreview = pedido.detalles
+            .slice(0, 3)
+            .map(d => productoMap.get(d.idProducto) ?? `Producto #${d.idProducto}`)
+            .join(", ");
+        const restantes = pedido.detalles.length - 3;
+        const resumenProductos = restantes > 0 ? `${nombresPreview} y ${restantes} más` : nombresPreview;
+
         return `
             <article class="order-card" data-id="${pedido.id}">
                 <div class="order-card__header">
@@ -87,6 +96,7 @@ function renderizarPedidos() {
                     <span class="badge ${badgeClase[pedido.estado]}">${pedido.estado}</span>
                 </div>
                 <p>Fecha: ${pedido.fecha}</p>
+                <p>${resumenProductos}</p>
                 <p>${cantProductos} producto(s)</p>
                 <span class="order-card__total">$${pedido.total}</span>
             </article>
