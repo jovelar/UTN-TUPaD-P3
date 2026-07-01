@@ -858,7 +858,119 @@ public class Main {
         // TODO: Implementar submenú de Reportes.
         // Opciones: 1-Productos por categoría  2-Pedidos por usuario
         //           3-Pedidos por estado  4-Total facturado  0-Volver
-        System.out.println("[Reportes] → TODO: implementar");
+        //System.out.println("[Reportes] → TODO: implementar");
+        String opcReporte="asd";
+        do{
+            System.out.println("######## REPORTES #######");
+            System.out.println("1-Productos por categoria");
+            System.out.println("2-Pedidos por usuario");
+            System.out.println("3-Pedidos por estado");
+            System.out.println("4-Total facturado");
+            System.out.println("\n0-Volver");
+            opcReporte=sc.nextLine().trim();
+
+            switch(opcReporte){
+                case "0":
+                    break;
+                case "1":
+                    Long categoria;
+                    mostrarCategorias(categoriaRepo.listarActivos());
+                    try{
+                        System.out.println("Ingrese el ID de la categoria elegida: ");
+                        categoria=Long.parseLong(sc.nextLine().trim());
+
+                        //Se verifica que la categoria existe antes de traer la lista de productos, y que no haya sido dada de baja logicamente
+                        Optional<Categoria>cat=categoriaRepo.buscarPorId(categoria);
+                        if(cat.isPresent()&& cat.get().isEliminado()==false){
+                            List<Producto>productos=categoriaRepo.buscarProductosPorCategoria(categoria);
+                            if(!productos.isEmpty()){
+                                mostrarProductos(productos);
+                            }else{
+                                System.out.println("La categoria no cuenta con productos para mostrar");
+                            }
+                        }else{
+                            System.out.println("La categoria no existe/no se encuentra disponible");
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Formato de opcion invalido");
+                    }
+                    break;
+                case "2":
+                    mostrarUsuarios(usuarioRepo.listarActivos());
+                    System.out.println("Ingrese el ID del usuario: ");
+                    try {
+                        Long idUsuario = Long.parseLong(sc.nextLine().trim());
+                        Optional<Usuario> usuarioDatos = usuarioRepo.buscarPorId(idUsuario);
+                        if (usuarioDatos.isPresent() && !usuarioDatos.get().isEliminado()) {
+                            List<Pedido> pedidos = usuarioRepo.buscarPedidosPorUsuario(idUsuario);
+                            if (pedidos.isEmpty()) {
+                                System.out.println("El usuario no tiene pedidos activos.");
+                            } else {
+                                mostrarPedidosUsuario(pedidos);
+                            }
+                        } else {
+                            System.out.println("Usuario no encontrado o dado de baja.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Formato de ID invalido.");
+                    }
+                    break;
+                case "3":
+
+                    String opcEstado;
+                    Estado estadoFiltro=null;
+                    try{
+                        System.out.println("Elija un estado para filtrar: ");
+                        System.out.println("1-CONFIRMADO");
+                        System.out.println("2-PENDIENTE");
+                        System.out.println("3-TERMINADO");
+                        System.out.println("4-CANCELADO");
+                        System.out.println("\n0 SALIR");
+
+                        opcEstado=sc.nextLine().trim();
+
+                        switch(opcEstado){
+                            case "0":
+                                break;
+                            case "1":
+                                estadoFiltro= Estado.CONFIRMADO;
+                                break;
+                            case "2":
+                                estadoFiltro= Estado.PENDIENTE;
+                                break;
+                            case "3":
+                                estadoFiltro= Estado.TERMINADO;
+                                break;
+                            case "4":
+                                estadoFiltro= Estado.CANCELADO;
+                                break;
+                            default:
+                                System.out.println("Opcion invalida");
+                                break;
+                        }
+
+                        //Si se asigno un estado, indicador de que recibio una opcion valida en el case
+                        if(estadoFiltro!=null){
+                            List<Pedido>listadoPedidosPorEstado=pedidoRepo.buscarPorEstado(estadoFiltro);
+                            if(!listadoPedidosPorEstado.isEmpty()){
+
+                            }else{
+                                System.out.println("No hay pedidos que correspondan con el estado "+estadoFiltro.toString());
+                            }
+                        }
+
+                    }catch(NumberFormatException e){
+                        System.out.println("Formato de estado no valido");
+                    }
+
+                    break;
+                case "4":
+                    break;
+                default:
+                    System.out.println("Opcion invalida");
+                    break;
+            }
+        }while(!opcReporte.equals("0"));
     }
 
     //METODOS AUXILIARES ADICIONALES
