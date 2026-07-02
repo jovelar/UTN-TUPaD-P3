@@ -915,11 +915,11 @@ public class Main {
                         System.out.println("Formato de ID invalido.");
                     }
                     break;
-                case "3":
+                    case "3":
 
                     String opcEstado;
-                    Estado estadoFiltro=null;
-                    try{
+                    Estado estadoFiltro = null;
+                    try {
                         System.out.println("Elija un estado para filtrar: ");
                         System.out.println("1-CONFIRMADO");
                         System.out.println("2-PENDIENTE");
@@ -927,39 +927,57 @@ public class Main {
                         System.out.println("4-CANCELADO");
                         System.out.println("\n0 SALIR");
 
-                        opcEstado=sc.nextLine().trim();
+                        opcEstado = sc.nextLine().trim();
 
-                        switch(opcEstado){
+                        switch (opcEstado) {
                             case "0":
                                 break;
                             case "1":
-                                estadoFiltro= Estado.CONFIRMADO;
+                                estadoFiltro = Estado.CONFIRMADO;
                                 break;
                             case "2":
-                                estadoFiltro= Estado.PENDIENTE;
+                                estadoFiltro = Estado.PENDIENTE;
                                 break;
                             case "3":
-                                estadoFiltro= Estado.TERMINADO;
+                                estadoFiltro = Estado.TERMINADO;
                                 break;
                             case "4":
-                                estadoFiltro= Estado.CANCELADO;
+                                estadoFiltro = Estado.CANCELADO;
                                 break;
                             default:
                                 System.out.println("Opcion invalida");
                                 break;
                         }
 
-                        //Si se asigno un estado, indicador de que recibio una opcion valida en el case
-                        if(estadoFiltro!=null){
-                            List<Pedido>listadoPedidosPorEstado=pedidoRepo.buscarPorEstado(estadoFiltro);
-                            if(!listadoPedidosPorEstado.isEmpty()){
+                        if (estadoFiltro != null) {
+                            List<Pedido> listadoPedidosPorEstado = pedidoRepo.buscarPorEstado(estadoFiltro);
+                            if (!listadoPedidosPorEstado.isEmpty()) {
 
-                            }else{
-                                System.out.println("No hay pedidos que correspondan con el estado "+estadoFiltro.toString());
+                                //Se junta el id del pedido y el nombre del  cliente en el map
+                                Map<Long, String> clientePorPedido = new HashMap<>();
+                                for (Usuario u : usuarioRepo.listarActivos()) {
+                                    List<Pedido> pedidosDelUsuario = usuarioRepo.buscarPedidosPorUsuario(u.getId());
+                                    if (!pedidosDelUsuario.isEmpty()) {
+                                        for (Pedido p : pedidosDelUsuario) {
+                                            clientePorPedido.put(p.getId(), u.getNombre() + " " + u.getApellido());
+                                        }
+                                    }
+                                }
+
+                                for (Pedido p : listadoPedidosPorEstado) {
+                                    String cliente = clientePorPedido.getOrDefault(p.getId(), "(sin cliente)");
+                                    System.out.println("ID: " + p.getId()
+                                            + ", FECHA: " + p.getFecha()
+                                            + ", CLIENTE: " + cliente
+                                            + ", TOTAL: $" + p.getTotal());
+                                }
+
+                            } else {
+                                System.out.println("No hay pedidos que correspondan con el estado " + estadoFiltro.toString());
                             }
                         }
 
-                    }catch(NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         System.out.println("Formato de estado no valido");
                     }
 
