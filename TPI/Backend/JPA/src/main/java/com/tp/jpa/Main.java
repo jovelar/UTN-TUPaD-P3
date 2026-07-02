@@ -190,81 +190,80 @@ public class Main {
                         mostrarCategorias(categoriaRepo.listarActivos());
                         System.out.println("Seleccione una categoria de la lista");
                         try{
+                            Long idCategoriaElegida=Long.parseLong(sc.nextLine().trim());
+                            Optional<Categoria>cat=categoriaRepo.buscarPorId(idCategoriaElegida);
+
+                            //Solo si la categoria existe
+                            if(!cat.isEmpty()){
+                                String nombreProductoNuevo="";
+                                do{
+                                    System.out.println("Ingrese el nombre del producto: ");
+                                    nombreProductoNuevo=sc.nextLine();
+                                    if(nombreProductoNuevo.isEmpty()){
+                                        System.out.println("Debe ingresar un nombre");
+                                    }
+                                }while(nombreProductoNuevo.isEmpty());
+
+                                System.out.println("Ingrese una descripcion:");
+                                String descProductoNuevo=sc.nextLine();
+
+                                Double precio=0.0;
+                                do{
+                                    try{
+                                        System.out.println("Ingrese el precio (double)");
+                                        precio=Double.parseDouble(sc.nextLine().trim());
+                                    }catch (NumberFormatException e){
+                                        System.out.println("Formato de precio invalido");
+                                    }
+                                }while(precio<=0.0);
+
+                                int stock=0;
+                                do{
+                                    try{
+                                        System.out.println("Ingrese el stock");
+                                        stock=Integer.parseInt(sc.nextLine().trim());
+                                    }catch (NumberFormatException e){
+                                        System.out.println("Formato de numero invalido");
+                                    }
+                                    if(stock<0){
+                                        System.out.println("El stock debe ser 0 o mayor");
+                                    }
+                                }while(stock<0);
+
+                                System.out.println("Ingrese el nombre del archivo de imagen");
+                                String nuevoArchivoImagen=sc.nextLine().trim();
+
+                                Producto nuevoProducto=Producto.builder()
+                                        .nombre(nombreProductoNuevo)
+                                        .precio(precio)
+                                        .descripcion(descProductoNuevo)
+                                        .stock(stock)
+                                        .imagen(nuevoArchivoImagen)
+                                        .disponible(true)
+                                        .eliminado(false)
+                                        .build();
+                                productoRepo.guardar(nuevoProducto);
+
+                                //Se actualiza el set de producto en categorias
+                                List<Producto>productosExistentes=categoriaRepo.buscarProductosPorCategoria(idCategoriaElegida);
+                                Set<Producto>productos=new HashSet<>(productosExistentes);
+                                productos.add(nuevoProducto);
+
+                                Categoria categoria=cat.get();
+                                categoria.setProductos(productos);
+                                categoriaRepo.guardar(categoria);
+
+                                System.out.println("Producto agregado con el id"+nuevoProducto.getId()+" en la categoria "+cat.get().getNombre()+"");
+
+                            }else{
+                                System.out.println("Id categoria invalido");
+                            }
 
 
-                            
 
 
                         }catch(NumberFormatException e){
                             System.out.println("Formarto de ID invalido");
-                        }
-                        Long idCategoriaElegida=Long.parseLong(sc.nextLine().trim());
-                        Optional<Categoria>cat=categoriaRepo.buscarPorId(idCategoriaElegida);
-
-                        //Solo si la categoria existe
-                        if(!cat.isEmpty()){
-                            String nombreProductoNuevo="";
-                            do{
-                                System.out.println("Ingrese el nombre del producto: ");
-                                nombreProductoNuevo=sc.nextLine();
-                                if(nombreProductoNuevo.isEmpty()){
-                                    System.out.println("Debe ingresar un nombre");
-                                }
-                            }while(nombreProductoNuevo.isEmpty());
-
-                            System.out.println("Ingrese una descripcion:");
-                            String descProductoNuevo=sc.nextLine();
-
-                            Double precio=0.0;
-                            do{
-                                try{
-                                    System.out.println("Ingrese el precio (double)");
-                                    precio=Double.parseDouble(sc.nextLine().trim());
-                                }catch (NumberFormatException e){
-                                    System.out.println("Formato de precio invalido");
-                                }
-                            }while(precio<=0.0);
-
-                            int stock=0;
-                            do{
-                                try{
-                                    System.out.println("Ingrese el stock");
-                                    stock=Integer.parseInt(sc.nextLine().trim());
-                                }catch (NumberFormatException e){
-                                    System.out.println("Formato de numero invalido");
-                                }
-                                if(stock<0){
-                                    System.out.println("El stock debe ser 0 o mayor");
-                                }
-                            }while(stock<0);
-
-                            System.out.println("Ingrese el nombre del archivo de imagen");
-                            String nuevoArchivoImagen=sc.nextLine().trim();
-
-                            Producto nuevoProducto=Producto.builder()
-                                    .nombre(nombreProductoNuevo)
-                                    .precio(precio)
-                                    .descripcion(descProductoNuevo)
-                                    .stock(stock)
-                                    .imagen(nuevoArchivoImagen)
-                                    .disponible(true)
-                                    .eliminado(false)
-                                    .build();
-                            productoRepo.guardar(nuevoProducto);
-
-                            //Se actualiza el set de producto en categorias
-                            List<Producto>productosExistentes=categoriaRepo.buscarProductosPorCategoria(idCategoriaElegida);
-                            Set<Producto>productos=new HashSet<>(productosExistentes);
-                            productos.add(nuevoProducto);
-
-                            Categoria categoria=cat.get();
-                            categoria.setProductos(productos);
-                            categoriaRepo.guardar(categoria);
-
-                            System.out.println("Producto agregado con el id"+nuevoProducto.getId()+" en la categoria "+cat.get().getNombre()+"");
-
-                        }else{
-                            System.out.println("Id categoria invalido");
                         }
 
                     }else{
@@ -294,25 +293,31 @@ public class Main {
                                 }
 
                                 boolean precioValido=true;
-                                double nuevoPrecio=0.0; //solo para inicializar
+                                double nuevoPrecio=0.0;
                                 do{
                                     try{
-                                        System.out.println("Ingrese el nuevo precio (actual:"+prodAux.getPrecio()+")");
-                                        nuevoPrecio=Double.parseDouble(sc.nextLine().trim());
-                                        precioValido=true;
-                                        if(nuevoPrecio<=0){
-                                            System.out.println("El precio debe ser mayor a  0");
-                                            precioValido=false;
+                                        System.out.println("Ingrese el nuevo precio (actual:"+prodAux.getPrecio()+") [ENTER para mantener]:");
+                                        String inputPrecio=sc.nextLine().trim();
+                                        if(inputPrecio.isEmpty()){
+                                            nuevoPrecio=prodAux.getPrecio();
+                                            precioValido=true;
+                                        }else{
+                                            nuevoPrecio=Double.parseDouble(inputPrecio);
+                                            precioValido=true;
+                                            if(nuevoPrecio<=0){
+                                                System.out.println("El precio debe ser mayor a  0");
+                                                precioValido=false;
+                                            }
                                         }
                                     }catch(NumberFormatException e){
                                         System.out.println("Formato de precio invalido");
-                                        precioValido=false;
+                                                precioValido=false;
                                     }
                                 }while(precioValido==false);
-                                prodAux.setPrecio(nuevoPrecio);
+                                prodAux.setPrecio(nuevoPrecio);  // sin cambios
 
-                                int nuevoStock=0; //Solo para inicialiar
-                                boolean stockValido=true;
+                                int nuevoStock=prodAux.getStock();
+                                boolean stockValido=false;
                                 do{
                                     try{
                                         System.out.println("ingrese el nuevo stock (actual:"+prodAux.getStock()+"): ");
@@ -320,6 +325,7 @@ public class Main {
                                         stockValido=true;
                                     }catch (NumberFormatException e){
                                         System.out.println("Formato de stock invalido");
+                                        stockValido=false;
                                     }
                                     if(nuevoStock<0){
                                         System.out.println("Stock debe ser igual-mayor a 0");
@@ -497,7 +503,7 @@ public class Main {
                             usuarioAEditar.setCelular(celularTemp);
                         }
 
-                        Optional<Usuario>usuarioExiste=null;
+                        //Optional<Usuario>usuarioExiste=null;
                         //String mailTemp="";
                         boolean mailListo = false;
                         do {
@@ -558,7 +564,7 @@ public class Main {
                     break;
             }
         }while(!opcUsuarios.equals("0"));
-        System.out.println("[Usuarios] → TODO: implementar");
+        //System.out.println("[Usuarios] → TODO: implementar");
     }
 
     private static void menuPedidos() {
@@ -595,7 +601,7 @@ public class Main {
                             break;
                         }
                         Optional<Usuario>validaUsuario=usuarioRepo.buscarPorId(idUsuario);
-                        if(validaUsuario.isPresent()){
+                        if(validaUsuario.isPresent()&& !validaUsuario.get().isEliminado()){
 
                             //Seleccion de forma de pago
                             int tipoPago=4;
@@ -1001,7 +1007,7 @@ public class Main {
                                 totalFacturado+=p.getTotal();
                             }
                         }
-                        System.out.println("\notal Facturado: "+String.format(Locale.US,"$%.2f",totalFacturado));
+                        System.out.println("\nTotal Facturado: "+String.format(Locale.US,"$%.2f",totalFacturado));
                     }else{
                         System.out.println("Total: 0.0");
                     }
@@ -1058,9 +1064,12 @@ public class Main {
             return;
         }
         for (Producto p : disponibles) {
-            System.out.println(
-                    "ID: " + p.getId() + ",NOMBRE: " + p.getNombre()
-                            + ",PRECIO: " + p.getPrecio() + ",STOCK: " + p.getStock());
+            // solo muestran los que tienen stock mayor a 0, no tiene sentido mostrar un producto para el cual no hay stock
+            if (p.getStock() > 0) {
+                System.out.println(
+                        "ID: " + p.getId() + ",NOMBRE: " + p.getNombre()
+                                + ",PRECIO: " + p.getPrecio() + ",STOCK: " + p.getStock());
+            }
         }
     }
 
