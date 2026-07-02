@@ -80,7 +80,7 @@ public class Main {
                 case "1":
                         String nuevoNombreCat="";
                         do{
-                            System.out.println("Ingrese una nombre: ");
+                            System.out.println("\n\nIngrese una nombre: ");
                             nuevoNombreCat=sc.nextLine();
                             if(nuevoNombreCat.isEmpty()){
                                 System.out.println("\n Debe ingresar un nombre!");
@@ -98,7 +98,7 @@ public class Main {
 
                     break;
                 case "2":
-                    System.out.println("Mostrando categorias activas: \n");
+                    System.out.println("\n\nostrando categorias activas: \n");
                     List<Categoria> cat=categoriaRepo.listarActivos();
                     if(!cat.isEmpty()){
                         mostrarCategorias(cat);
@@ -173,7 +173,7 @@ public class Main {
         // Opciones: 1-Alta  2-Modificar  3-Baja lógica  4-Listado  0-Volver
         String opcProductos="asd";
         do{
-            System.out.println("####### PRODUCTOS #######");
+            System.out.println("\n\n####### PRODUCTOS #######");
             System.out.println("1- Alta");
             System.out.println("2- Modificar");
             System.out.println("3- Baja");
@@ -189,6 +189,15 @@ public class Main {
                     if(!categoriaRepo.listarActivos().isEmpty()){
                         mostrarCategorias(categoriaRepo.listarActivos());
                         System.out.println("Seleccione una categoria de la lista");
+                        try{
+
+
+                            
+
+
+                        }catch(NumberFormatException e){
+                            System.out.println("Formarto de ID invalido");
+                        }
                         Long idCategoriaElegida=Long.parseLong(sc.nextLine().trim());
                         Optional<Categoria>cat=categoriaRepo.buscarPorId(idCategoriaElegida);
 
@@ -368,7 +377,7 @@ public class Main {
         // Opciones: 1-Alta  2-Modificar  3-Baja lógica  4-Listado  5-Buscar por mail  0-Volver
         String opcUsuarios="";
         do{
-            System.out.println("####### USUARIOS #######");
+            System.out.println("\n\n####### USUARIOS #######");
             System.out.println("1-Alta");
             System.out.println("2-Modificar");
             System.out.println("3-Baja logica");
@@ -558,7 +567,7 @@ public class Main {
         //           5-Por usuario  6-Por estado  0-Volvero
         String opcMenuPedidos="0";
         do{
-            System.out.println("####### PEDIDOS #######");
+            System.out.println("\n\n####### PEDIDOS #######");
             System.out.println("1-Alta");
             System.out.println("2-Cambiar");
             System.out.println("3-Baja logica");
@@ -627,7 +636,7 @@ public class Main {
                                     Optional<Producto>prodOptional=productoRepo.buscarPorId(idProducto);
 
                                     //Se valida que exista, que no este eliminado y que este disponible
-                                    if (prodOptional.isPresent() && !prodOptional.get().isEliminado() && prodOptional.get().getDisponible()) {
+                                    if (prodOptional.isPresent() && !prodOptional.get().isEliminado() && prodOptional.get().getDisponible() && prodOptional.get().getStock() > 0) {
                                         int stockDeseado=0;
 
                                         int existencias=0;
@@ -861,7 +870,7 @@ public class Main {
         //System.out.println("[Reportes] → TODO: implementar");
         String opcReporte="asd";
         do{
-            System.out.println("######## REPORTES #######");
+            System.out.println("\n\n######## REPORTES #######");
             System.out.println("1-Productos por categoria");
             System.out.println("2-Pedidos por usuario");
             System.out.println("3-Pedidos por estado");
@@ -983,6 +992,19 @@ public class Main {
 
                     break;
                 case "4":
+                    System.out.println("Preparando resumen:");
+                    List<Pedido>pedidosTerminados=pedidoRepo.buscarPorEstado(Estado.TERMINADO);
+                    if(!pedidosTerminados.isEmpty()){
+                        Double totalFacturado=0.0;
+                        for(Pedido p:pedidosTerminados){
+                            if(p.getTotal()!=null){
+                                totalFacturado+=p.getTotal();
+                            }
+                        }
+                        System.out.println("\notal Facturado: "+String.format(Locale.US,"$%.2f",totalFacturado));
+                    }else{
+                        System.out.println("Total: 0.0");
+                    }
                     break;
                 default:
                     System.out.println("Opcion invalida");
