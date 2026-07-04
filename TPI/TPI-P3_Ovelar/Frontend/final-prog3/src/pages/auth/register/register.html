@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body class="login-page">
+    <div class="login-box">
+            <h1 class="login-box__title"> Food Store</h1>
+            <h3>Registrarse</h3>
+            <form class="login-box__form">
+
+                <div class="login-form__field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" autocomplete="off" placeholder="Tu nombre">
+                </div>
+
+                <div class="login-form__field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="off" placeholder="example@example.com">
+                </div>
+
+                <div class="login-form__field">
+                    <label for="password">password</label>
+                    <input type="password" id="password" name="password" autocomplete="off" placeholder="********">
+                </div>
+
+                <button type="submit">Registrarse</button>
+
+            </form>
+            <div><p>Ya posee una cuenta? <a href="/src/pages/auth/login/login.html">Inicie sesión!</a></p></div>
+    </div>
+
+    <script type="module" src="./register.ts"></script>
+
+</body>
+
+</html>

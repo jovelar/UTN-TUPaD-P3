@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body class="login-page">
+    <div class="login-box">
+            <h1 class="login-box__title"> Food Store</h1>
+            <h3>Iniciar Sesion</h3>
+            <form id="form" class="login-box__form">
+        
+                <div class="login-form__field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="off" placeholder="example@example.com">
+                </div>
+
+                <div class="login-form__field">
+                    <label for="password">password</label>
+                    <input type="password" id="password" name="password" autocomplete="off" placeholder="********">
+                </div>
+        
+                <button type="submit">Ingresar</button>
+                <p id="errorMsg" style="color:red;font-size:0.85rem;"></p>
+            </form>
+            <div><p>¿No posee una cuenta? <a href="/src/pages/auth/register/register.html">registrese!</a></p></div>
+            <div class="login-box-accounts">
+                <p>cuentas de prueba</p>
+                <p>Admin: admin@admin.com / 123456</p>
+                <p>Usuario: cliente@food.com / cliente123</p>
+            </div>
+    </div>
+
+    <script type="module" src="./login.ts"></script>
+
+</body>
+
+</html>

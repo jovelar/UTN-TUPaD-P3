@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Store - Gestión de Productos</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body class="admin">
+    <header>
+        <nav class="nav">
+            <h1 class="nav__brand">Food Store</h1>
+            <ul class="nav__links">
+                <li class="nav__link"><a href="/src/pages/store/home/home.html">Tienda</a></li>
+                <li class="nav__link"><a href="/src/pages/admin/adminHome/adminHome.html">Panel Admin</a></li>
+                <li class="nav__link"><span id="userName"></span></li>
+                <li class="nav__link"><button id="logoutButton">Cerrar Sesión</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin__body">
+        <aside class="admin__sidebar">
+            <div class="admin__sidebar-header">
+                <h3>Administración</h3>
+                <small>Panel de admin</small>
+            </div>
+            <nav>
+                <ul class="admin__sidebar-nav">
+                    <li><a href="/src/pages/admin/adminHome/adminHome.html">Dashboard</a></li>
+                    <li><a href="/src/pages/admin/categories/categories.html">Categorías</a></li>
+                    <li class="active"><a href="/src/pages/admin/products/products.html">Productos</a></li>
+                    <li><a href="/src/pages/admin/orders/orders.html">Pedidos</a></li>
+                    <li><a href="/src/pages/store/home/home.html">Ver Tienda</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin__content">
+            <div class="admin__page-header">
+                <h2>Gestión de Productos</h2>
+                <button id="btnNuevoProducto" class="btn btn--primary">+ Nuevo Producto</button>
+            </div>
+
+            <table class="admin-table" id="tablaProductos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Categoría</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCuerpo">
+                    <!-- Populated by products.ts -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Modal crear/editar producto -->
+    <div id="modalProducto" class="modal" style="display:none">
+        <div class="modal__content">
+            <button id="cerrarModal" class="modal__close">×</button>
+            <h3 id="modalTitulo">Nuevo Producto</h3>
+            <form id="formProducto">
+                <input type="hidden" id="productoId">
+                <div class="form__group">
+                    <label for="productoNombre">Nombre</label>
+                    <input type="text" id="productoNombre" required placeholder="Nombre del producto">
+                </div>
+                <div class="form__group">
+                    <label for="productoDescripcion">Descripción</label>
+                    <textarea id="productoDescripcion" placeholder="Descripción del producto"></textarea>
+                </div>
+                <div class="form__group">
+                    <label for="productoPrecio">Precio</label>
+                    <input type="number" id="productoPrecio" required min="0.01" step="0.01" placeholder="0.00">
+                </div>
+                <div class="form__group">
+                    <label for="productoStock">Stock</label>
+                    <input type="number" id="productoStock" required min="0" placeholder="0">
+                </div>
+                <div class="form__group">
+                    <label for="productoCategoria">Categoría</label>
+                    <select id="productoCategoria" required>
+                        <option value="">Seleccione una categoría</option>
+                        <!-- Populated by products.ts -->
+                    </select>
+                </div>
+                <div class="form__group">
+                    <label for="productoImagen">URL de Imagen</label>
+                    <input type="text" id="productoImagen" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+                <div class="form__group form__group--check">
+                    <input type="checkbox" id="productoDisponible" checked>
+                    <label for="productoDisponible">Producto disponible</label>
+                </div>
+                <button type="submit" class="btn btn--primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <footer></footer>
+    <script type="module" src="./products.ts"></script>
+</body>
+</html>
